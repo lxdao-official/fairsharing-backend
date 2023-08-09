@@ -11,15 +11,16 @@ datasource db {
 }
 
 model Project {
-  id            Int            @id @default(autoincrement())
-  name          String         @unique
-  intro         String?
-  symbol        String         @unique
-  createAt      DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deleted       Boolean        @default(false)
-  contributions Contribution[]
-  members       Member[]
+  id             Int            @id @default(autoincrement())
+  name           String         @unique
+  intro          String?
+  symbol         String         @unique
+  pointConsensus String
+  createAt       DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deleted        Boolean        @default(false)
+  contributions  Contribution[]
+  members        Member[]
 }
 
 model User {
@@ -29,6 +30,33 @@ model User {
   wallet        String         @unique
   contributions Contribution[]
   members       Member[]
+}
+
+enum Status {
+  UNREADY
+  READY
+  CLAIM
+  SUCCESS
+  FAIL
+}
+
+model Contribution {
+  id        Int      @id @default(autoincrement())
+  detail    String
+  proof     String
+  credit    Int
+  memberIds Int[]
+  status    Status   @default(UNREADY)
+  argee     Int      @default(0)
+  disagree  Int      @default(0)
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  endAt     DateTime
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted   Boolean  @default(false)
 }
 
 enum Role {
@@ -44,29 +72,6 @@ model Member {
   project   Project  @relation(fields: [projectId], references: [id])
   projectId Int
   role      Role     @default(ADMIN)
-  createAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deleted   Boolean  @default(false)
-}
-
-enum Status {
-  UNREADY
-  READY
-  CLAIM
-  SUCCESS
-  FAIL
-}
-
-model Contribution {
-  id        Int      @id @default(autoincrement())
-  status    Status   @default(UNREADY)
-  argee     Int      @default(0)
-  disagree  Int      @default(0)
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   Int
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int
-  endAt     DateTime
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
   deleted   Boolean  @default(false)
