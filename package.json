@@ -24,6 +24,7 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.1.7",
     "@prisma/client": "^5.1.1",
     "ethers": "^6.7.0",
     "prisma": "^5.1.1",

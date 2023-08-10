@@ -14,6 +14,7 @@ model Project {
   id             Int            @id @default(autoincrement())
   name           String         @unique
   intro          String?
+  logo           String?
   symbol         String         @unique
   pointConsensus String
   createAt       DateTime       @default(now())
@@ -30,6 +31,7 @@ model User {
   wallet        String         @unique
   contributions Contribution[]
   members       Member[]
+  MintRecord    MintRecord[]
 }
 
 enum Status {
@@ -41,22 +43,41 @@ enum Status {
 }
 
 model Contribution {
-  id        Int      @id @default(autoincrement())
-  detail    String
-  proof     String
-  credit    Int
-  memberIds Int[]
-  status    Status   @default(UNREADY)
-  argee     Int      @default(0)
-  disagree  Int      @default(0)
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   Int
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int
-  endAt     DateTime
-  createAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deleted   Boolean  @default(false)
+  id         Int          @id @default(autoincrement())
+  detail     String
+  proof      String
+  credit     Int
+  toIds      Int[]
+  status     Status       @default(UNREADY)
+  argee      Int          @default(0)
+  disagree   Int          @default(0)
+  owner      User         @relation(fields: [ownerId], references: [id])
+  ownerId    Int
+  project    Project      @relation(fields: [projectId], references: [id])
+  projectId  Int
+  endAt      DateTime
+  createAt   DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deleted    Boolean      @default(false)
+  MintRecord MintRecord[]
+}
+
+enum MintStatus {
+  UNMINT
+  MINTED
+}
+
+model MintRecord {
+  id             Int          @id @default(autoincrement())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int
+  credit         Int
+  contribution   Contribution @relation(fields: [contributionId], references: [id])
+  contributionId Int
+  status         MintStatus   @default(UNMINT)
+  createAt       DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deleted        Boolean      @default(false)
 }
 
 enum Role {
