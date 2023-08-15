@@ -4,8 +4,13 @@ export type CodeDescription = {
 };
 
 export class Code {
-  public static SUCCESS: CodeDescription = {
+  static SUCCESS: CodeDescription = {
     code: 200,
     message: 'Success.',
+  };
+
+  static INTERNAL_ERROR: CodeDescription = {
+    code: 500,
+    message: 'Internal error.',
   };
 }
