@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Project {
-  id             Int            @id @default(autoincrement())
+  id             String         @id @default(uuid())
   name           String         @unique
   intro          String?
   logo           String?
@@ -25,7 +25,7 @@ model Project {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
+  id            String         @id @default(uuid())
   avatar        String?
   bio           String?
   wallet        String         @unique
@@ -43,18 +43,18 @@ enum Status {
 }
 
 model Contribution {
-  id         Int          @id @default(autoincrement())
+  id         String       @id @default(uuid())
   detail     String
   proof      String
   credit     Int
-  toIds      Int[]
+  toIds      String[]
   status     Status       @default(UNREADY)
   argee      Int          @default(0)
   disagree   Int          @default(0)
   owner      User         @relation(fields: [ownerId], references: [id])
-  ownerId    Int
+  ownerId    String
   project    Project      @relation(fields: [projectId], references: [id])
-  projectId  Int
+  projectId  String
   endAt      DateTime
   createAt   DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
@@ -68,12 +68,12 @@ enum MintStatus {
 }
 
 model MintRecord {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(uuid())
   user           User         @relation(fields: [userId], references: [id])
-  userId         Int
+  userId         String
   credit         Int
   contribution   Contribution @relation(fields: [contributionId], references: [id])
-  contributionId Int
+  contributionId String
   status         MintStatus   @default(UNMINT)
   createAt       DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -86,12 +86,12 @@ enum Role {
 }
 
 model Member {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   wallet    String
   user      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  userId    String?
   project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int
+  projectId String
   role      Role     @default(ADMIN)
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
