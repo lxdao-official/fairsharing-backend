@@ -2,6 +2,7 @@ import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { CreateProjectBody } from '@core/type/doc/project';
+import { Prisma } from '@prisma/client';
 
 @Controller('project')
 export class ProjectController {
