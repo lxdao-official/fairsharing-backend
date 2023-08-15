@@ -16,6 +16,7 @@ export class ProjectController {
 
   @Post('create')
   async createProject(@Body() body: CreateProjectBody) {
-    return 'create';
+    const data = await this.projectService.createProject(body);
+    return CoreApiResponse.success(data);
   }
 }

@@ -15,7 +15,4 @@ export class CreateProjectBody {
 
   @ApiProperty({ type: 'string', required: false })
   intro: string;
-
-  @ApiProperty({ type: 'string', required: false })
-  content: string;
 }

@@ -7,6 +7,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -27,14 +28,26 @@ export class HttpExceptionFilter implements ExceptionFilter {
     error: Error,
     errorResponse: CoreApiResponse<unknown>,
   ): CoreApiResponse<unknown> {
-    if (error instanceof HttpException) {
-      errorResponse = CoreApiResponse.error(
-        error.getStatus(),
+    if (error instanceof PrismaClientKnownRequestError) {
+      const statusCode = Code.DB_ERROR.code;
+      const message = `[${error.code}]: ${this.exceptionShortMessage(
         error.message,
-        null,
-      );
+      )}`;
+      return CoreApiResponse.error(statusCode, message, null);
+    }
+    if (error instanceof HttpException) {
+      return CoreApiResponse.error(error.getStatus(), error.message, null);
     }
 
     return errorResponse;
+  }
+
+  private exceptionShortMessage(message: string): string {
+    const shortMessage = message.substring(message.indexOf('→'));
+
+    return shortMessage
+      .substring(shortMessage.indexOf('\n'))
+      .replace(/\n/g, '')
+      .trim();
   }
 }

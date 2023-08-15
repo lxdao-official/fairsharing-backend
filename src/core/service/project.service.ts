@@ -14,7 +14,7 @@ export class ProjectService {
   }
 
   async createProject(body: CreateProjectBody) {
-    await this.prisma.project.create({
+    return this.prisma.project.create({
       data: body,
     });
   }

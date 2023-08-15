@@ -1,8 +1,12 @@
 import { MiddlewareConsumer, Module, Logger } from '@nestjs/common';
-import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
+import {
+  PrismaModule,
+  loggingMiddleware,
+  PrismaClientExceptionFilter,
+} from 'nestjs-prisma';
 import { ProjectModule } from './module/project.module';
 import LogsMiddleware from '@/src/middleware/logs';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/src/middleware/exceptionFilter';
 
 @Module({
