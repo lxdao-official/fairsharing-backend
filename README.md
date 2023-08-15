@@ -29,12 +29,22 @@
 ## Installation
 
 ```bash
+# install pnpm by npm/yarn/homebrew
 $ pnpm install
+```
+
+## Database
+
+add `DATABASE_URL` to `.env` file
+```dotenv
+DATABASE_URL="postgres://postgres:postgrespw@postgres:5432"
 ```
 
 ## Running the app
 
 ```bash
+$ pnpm run dc:up # or `docker-compose up`
+
 # development
 $ pnpm run start
 
