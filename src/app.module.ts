@@ -1,7 +1,26 @@
-import { Module } from '@nestjs/common';
-import { ProjectModule } from './project/project.module';
+import { MiddlewareConsumer, Module, Logger } from '@nestjs/common';
+import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
+import { ProjectModule } from './module/project.module';
+import LogsMiddleware from '@/src/middleware/logs';
 
 @Module({
-  imports: [ProjectModule],
+  imports: [
+    PrismaModule.forRoot({
+      isGlobal: true,
+      prismaServiceOptions: {
+        middlewares: [
+          loggingMiddleware({
+            logger: new Logger('PrismaMiddleware'),
+            logLevel: 'log',
+          }),
+        ],
+      },
+    }),
+    ProjectModule,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LogsMiddleware).forRoutes('*');
+  }
+}
