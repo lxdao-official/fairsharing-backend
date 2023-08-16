@@ -10,7 +10,7 @@ COPY pnpm-lock.yaml .
 COPY prisma ./prisma/
 
 # Install app dependencies
-RUN npm install -g pnpm
+RUN npm install -g pnpm@7.29.3
 RUN pnpm install
 
 COPY . .
@@ -19,7 +19,7 @@ RUN pnpm run build
 
 FROM node:18 AS runner
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@7.29.3
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
