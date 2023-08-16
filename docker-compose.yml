@@ -13,6 +13,8 @@ services:
       - postgres
     env_file:
       - .env
+    environment:
+      PRISMA_MIGRATION_NAME: $PRISMA_MIGRATION_NAME
 
   postgres:
     image: postgres:15

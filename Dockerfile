@@ -27,6 +27,8 @@ COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
+ENV PRISMA_MIGRATION_NAME=$PRISMA_MIGRATION_NAME
+
 EXPOSE 3000
 CMD [ "pnpm", "run", "start:prod" ]
-CMD [ "sh", "-c", "pnpm run prisma:migrate && pnpm run start:dev" ]
+CMD [ "sh", "-c", "pnpm run prisma:migrate && pnpm run start" ]
