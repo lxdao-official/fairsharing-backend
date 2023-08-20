@@ -7,7 +7,10 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime/library';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -33,6 +36,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const message = `[${error.code}]: ${this.exceptionShortMessage(
         error.message,
       )}`;
+      return CoreApiResponse.error(statusCode, message, null);
+    }
+    if (error instanceof PrismaClientValidationError) {
+      const statusCode = Code.DB_ERROR.code;
+      const message = Code.DB_ERROR.message;
       return CoreApiResponse.error(statusCode, message, null);
     }
     if (error instanceof HttpException) {

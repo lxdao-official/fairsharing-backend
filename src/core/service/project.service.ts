@@ -29,7 +29,7 @@ export class ProjectService {
             data: [
               ...contributors.map((item) => ({
                 wallet: item.wallet,
-                permission: Number(item.permission),
+                permission: item.permission,
                 role: item.role,
                 nickName: item.nickName,
               })),
