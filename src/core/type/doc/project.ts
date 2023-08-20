@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsArray } from 'class-validator';
+import { Contributor } from '@core/type/contributor';
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -16,6 +17,21 @@ export class CreateProjectBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   pointConsensus: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ type: 'number' })
+  network: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ type: 'number' })
+  votePeriod: number;
+
+  @IsNotEmpty()
+  @IsArray()
+  @ApiProperty({ isArray: true })
+  contributors: Array<Contributor>;
 
   @IsString()
   @ApiProperty({ type: 'string', required: false })
