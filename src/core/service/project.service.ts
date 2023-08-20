@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
+import { paginate, paginator } from '@core/utils/paginator';
 
 @Injectable()
 export class ProjectService {
@@ -10,11 +11,15 @@ export class ProjectService {
     private contributorService: ContributorService,
   ) {}
   async getProjectList() {
-    return this.prisma.project.findMany({
-      where: {
-        deleted: false,
+    return paginate(
+      this.prisma.project,
+      {
+        where: {
+          deleted: false,
+        },
       },
-    });
+      {},
+    );
   }
 
   async createProject(body: CreateProjectBody) {
