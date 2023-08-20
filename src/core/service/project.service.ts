@@ -29,13 +29,22 @@ export class ProjectService {
             data: [
               ...contributors.map((item) => ({
                 wallet: item.wallet,
-                permission: item.permission,
+                permission: Number(item.permission),
                 role: item.role,
                 nickName: item.nickName,
               })),
             ],
           },
         },
+      },
+    });
+  }
+
+  async getProjectDetail(projectId: string) {
+    return this.prisma.project.findFirst({
+      where: {
+        id: projectId,
+        deleted: false,
       },
     });
   }
