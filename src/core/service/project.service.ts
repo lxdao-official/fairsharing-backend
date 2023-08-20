@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
-import { paginate, paginator } from '@core/utils/paginator';
+import { paginate } from '@core/utils/paginator';
 
 @Injectable()
 export class ProjectService {
@@ -20,6 +20,22 @@ export class ProjectService {
       },
       {},
     );
+  }
+
+  async getProjectListByUserId(userId: string) {
+    const data = await this.prisma.contributor.findMany({
+      where: {
+        userId,
+      },
+    });
+    const ids = data.map((item) => item.projectId);
+    return this.prisma.project.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
   }
 
   async createProject(body: CreateProjectBody) {

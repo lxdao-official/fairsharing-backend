@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { CreateProjectBody } from '@core/type/doc/project';
@@ -9,7 +17,11 @@ export class ProjectController {
     @Inject(ProjectService) private readonly projectService: ProjectService,
   ) {}
   @Get('list')
-  async getProjectList() {
+  async getProjectList(@Query('userId') userId: string) {
+    if (userId) {
+      const list = await this.projectService.getProjectListByUserId(userId);
+      return CoreApiResponse.success(list);
+    }
     const list = await this.projectService.getProjectList();
     return CoreApiResponse.success(list);
   }
