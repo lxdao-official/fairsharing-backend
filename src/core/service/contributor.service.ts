@@ -1,8 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
-import { Contributor } from '@core/type/contributor';
-import { Permission } from '@prisma/client';
+import { Contributor, Permission } from '@core/type/contributor';
 
 @Injectable()
 export class ContributorService {
@@ -23,9 +22,9 @@ export class ContributorService {
 
   checkOwnerPermission(contributors: Contributor[]) {
     const ownerContributor = contributors.filter(
-      (item) => item.permission === Permission.OWNER,
+      (item) => Number(item.permission) === Permission.Owner,
     );
-    if (ownerContributor.length > 1) {
+    if (ownerContributor.length !== 1) {
       throw new HttpException(
         Code.OWNER_PERMISSION_ERROR.message,
         Code.OWNER_PERMISSION_ERROR.code,

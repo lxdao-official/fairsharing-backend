@@ -25,7 +25,16 @@ export class ProjectService {
       data: {
         ...data,
         contributors: {
-          createMany: contributors as any,
+          createMany: {
+            data: [
+              ...contributors.map((item) => ({
+                wallet: item.wallet,
+                permission: Number(item.permission),
+                role: item.role,
+                nickName: item.nickName,
+              })),
+            ],
+          },
         },
       },
     });
