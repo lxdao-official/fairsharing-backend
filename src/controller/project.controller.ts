@@ -1,15 +1,17 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
-import { CreateProjectBody } from '@core/type/doc/project';
+import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 
 @Controller('project')
 export class ProjectController {
@@ -29,6 +31,21 @@ export class ProjectController {
   @Get(':projectId')
   async getProjectDetail(@Param('projectId') projectId: string) {
     const detail = await this.projectService.getProjectDetail(projectId);
+    return CoreApiResponse.success(detail);
+  }
+
+  @Delete(':projectId/delete')
+  async deleteProject(@Param('projectId') projectId: string) {
+    await this.projectService.deleteProject(projectId);
+    return CoreApiResponse.success(null);
+  }
+
+  @Put(':projectId/edit')
+  async editProject(
+    @Param('projectId') projectId: string,
+    @Body() body: UpdateProjectBody,
+  ) {
+    const detail = await this.projectService.editProject(projectId, body);
     return CoreApiResponse.success(detail);
   }
 

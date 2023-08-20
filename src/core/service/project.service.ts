@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateProjectBody } from '@core/type/doc/project';
+import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
 
@@ -67,6 +67,28 @@ export class ProjectService {
         id: projectId,
         deleted: false,
       },
+    });
+  }
+
+  async deleteProject(projectId: string) {
+    return this.prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+  }
+
+  async editProject(projectId: string, body: UpdateProjectBody) {
+    delete body.signature;
+    delete body.contributorId;
+    return this.prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: body,
     });
   }
 }

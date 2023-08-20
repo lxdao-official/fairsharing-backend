@@ -31,6 +31,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     error: Error,
     errorResponse: CoreApiResponse<unknown>,
   ): CoreApiResponse<unknown> {
+    console.log(error);
     if (error instanceof PrismaClientKnownRequestError) {
       const statusCode = Code.DB_ERROR.code;
       const message = `[${error.code}]: ${this.exceptionShortMessage(

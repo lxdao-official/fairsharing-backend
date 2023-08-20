@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Contributor } from '@core/type/contributor';
+import { AuthBody } from '@core/type/doc/auth';
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -47,5 +48,27 @@ export class CreateProjectBody {
 
   @IsString()
   @ApiProperty({ type: 'string', required: false })
+  intro: string;
+}
+
+export class UpdateProjectBody extends AuthBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  pointConsensus: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ type: 'number' })
+  votePeriod: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  logo: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
   intro: string;
 }
