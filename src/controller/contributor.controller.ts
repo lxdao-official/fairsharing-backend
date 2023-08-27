@@ -23,16 +23,16 @@ export class ContributorController {
   ) {}
   @Get('list')
   async getContributorList(@Query() data: ContributorListQuery) {
-    const { pageSize, currentPage } = data;
-    const list = await this.contributorService.getContributorList(
-      pageSize,
-      currentPage,
-    );
+    const { projectId } = data;
+    const list = await this.contributorService.getContributorList(projectId);
     return CoreApiResponse.success(list);
   }
 
   @Delete(':projectId/delete')
-  async deleteContributor(@Param('projectId') projectId: string) {}
+  async deleteContributor(@Param('projectId') projectId: string) {
+    await this.contributorService.deleteContributor(projectId);
+    return CoreApiResponse.success();
+  }
 
   @Put(':projectId/edit')
   async editContributor(

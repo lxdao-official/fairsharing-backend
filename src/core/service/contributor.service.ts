@@ -2,25 +2,29 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import { Contributor, Permission } from '@core/type/contributor';
-import { paginate } from '@core/utils/paginator';
 
 @Injectable()
 export class ContributorService {
   constructor(private prisma: PrismaService) {}
 
-  async getContributorList(pageSize: number, currentPage: number) {
-    return paginate(
-      this.prisma.contributor,
-      {
-        where: {
-          deleted: false,
-        },
+  async getContributorList(projectId: string) {
+    return this.prisma.contributor.findMany({
+      where: {
+        deleted: false,
+        projectId,
       },
-      {
-        pageSize,
-        currentPage,
+    });
+  }
+
+  async deleteContributor(projectId: string) {
+    return this.prisma.contributor.update({
+      where: {
+        id: projectId,
       },
-    );
+      data: {
+        deleted: true,
+      },
+    });
   }
 
   checkWalletUnique(contributors: Contributor[]) {
