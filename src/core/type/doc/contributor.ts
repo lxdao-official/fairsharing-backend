@@ -5,6 +5,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Contributor } from '@core/type/contributor';
 
 export class ContributorListQuery {
   @IsString()
@@ -13,13 +14,17 @@ export class ContributorListQuery {
 }
 
 export class DeleteContributorsBody {
-  @IsString()
-  @ApiProperty({ type: 'string' })
-  projectId: string;
-
   @ArrayNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
   @ApiProperty({ isArray: true })
-  contributors: string[];
+  contributorIds: string[];
+}
+
+export class UpdateContributorsBody {
+  @ArrayNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ApiProperty({ isArray: true })
+  contributors: Contributor[];
 }

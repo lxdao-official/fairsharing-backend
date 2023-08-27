@@ -2,7 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import { Contributor, Permission } from '@core/type/contributor';
-import { DeleteContributorsBody } from '@core/type/doc/contributor';
+import {
+  DeleteContributorsBody,
+  UpdateContributorsBody,
+} from '@core/type/doc/contributor';
+import { UpdateProjectBody } from '@core/type/doc/project';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ContributorService {
@@ -18,18 +23,34 @@ export class ContributorService {
   }
 
   async deleteContributor(body: DeleteContributorsBody) {
-    const { projectId, contributors } = body;
+    const { contributorIds } = body;
     return this.prisma.contributor.updateMany({
       where: {
-        projectId,
         id: {
-          in: contributors,
+          in: contributorIds,
         },
       },
       data: {
         deleted: true,
       },
     });
+  }
+
+  async editContributor(body: UpdateContributorsBody) {
+    const { contributors } = body;
+    const fn = contributors.map((item) => {
+      return this.prisma.contributor.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          permission: item.permission,
+          nickName: item.nickName,
+          role: item.role,
+        },
+      });
+    });
+    return this.prisma.$transaction(fn);
   }
 
   checkWalletUnique(contributors: Contributor[]) {

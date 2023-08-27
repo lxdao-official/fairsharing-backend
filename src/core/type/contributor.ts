@@ -9,4 +9,5 @@ export interface Contributor {
   wallet: string;
   permission: Permission;
   role: string;
+  id?: string;
 }

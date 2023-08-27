@@ -16,6 +16,7 @@ import { ContributorService } from '@service/contributor.service';
 import {
   ContributorListQuery,
   DeleteContributorsBody,
+  UpdateContributorsBody,
 } from '@core/type/doc/contributor';
 
 @Controller('contributor')
@@ -37,11 +38,11 @@ export class ContributorController {
     return CoreApiResponse.success();
   }
 
-  @Put(':projectId/edit')
-  async editContributor(
-    @Param('projectId') projectId: string,
-    @Body() body: UpdateProjectBody,
-  ) {}
+  @Put('/edit')
+  async editContributor(@Body() body: UpdateContributorsBody) {
+    await this.contributorService.editContributor(body);
+    return CoreApiResponse.success();
+  }
 
   @Post('create')
   async createContributor(@Body() body: CreateProjectBody) {}
