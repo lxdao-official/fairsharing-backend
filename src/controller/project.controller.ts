@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
-import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
+import {
+  CreateProjectBody,
+  ProjectListQuery,
+  UpdateProjectBody,
+} from '@core/type/doc/project';
 
 @Controller('project')
 export class ProjectController {
@@ -19,12 +23,16 @@ export class ProjectController {
     @Inject(ProjectService) private readonly projectService: ProjectService,
   ) {}
   @Get('list')
-  async getProjectList(@Query('userId') userId: string) {
+  async getProjectList(@Query() data: ProjectListQuery) {
+    const { userId, pageSize, currentPage } = data;
     if (userId) {
       const list = await this.projectService.getProjectListByUserId(userId);
       return CoreApiResponse.success(list);
     }
-    const list = await this.projectService.getProjectList();
+    const list = await this.projectService.getProjectList(
+      pageSize,
+      currentPage,
+    );
     return CoreApiResponse.success(list);
   }
 

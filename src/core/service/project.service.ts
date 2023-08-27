@@ -3,6 +3,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProjectService {
@@ -10,7 +11,7 @@ export class ProjectService {
     private prisma: PrismaService,
     private contributorService: ContributorService,
   ) {}
-  async getProjectList() {
+  async getProjectList(pageSize: number, currentPage: number) {
     return paginate(
       this.prisma.project,
       {
@@ -18,7 +19,10 @@ export class ProjectService {
           deleted: false,
         },
       },
-      {},
+      {
+        pageSize,
+        currentPage,
+      },
     );
   }
 
@@ -26,11 +30,13 @@ export class ProjectService {
     const data = await this.prisma.contributor.findMany({
       where: {
         userId,
+        deleted: false,
       },
     });
     const ids = data.map((item) => item.projectId);
     return this.prisma.project.findMany({
       where: {
+        deleted: false,
         id: {
           in: ids,
         },
@@ -44,7 +50,7 @@ export class ProjectService {
     this.contributorService.checkOwnerPermission(contributors);
     return this.prisma.project.create({
       data: {
-        ...data,
+        ...plainToClass(CreateProjectBody, data),
         contributors: {
           createMany: {
             data: [
@@ -82,13 +88,11 @@ export class ProjectService {
   }
 
   async editProject(projectId: string, body: UpdateProjectBody) {
-    delete body.signature;
-    delete body.contributorId;
     return this.prisma.project.update({
       where: {
         id: projectId,
       },
-      data: body,
+      data: plainToClass(UpdateProjectBody, body),
     });
   }
 }
