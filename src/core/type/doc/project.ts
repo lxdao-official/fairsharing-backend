@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Contributor } from '@core/type/contributor';
+import { PaginateQuery } from '@core/type/doc/common';
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -72,16 +73,8 @@ export class UpdateProjectBody {
   intro: string;
 }
 
-export class ProjectListQuery {
+export class ProjectListQuery extends PaginateQuery {
   @IsString()
   @ApiProperty({ type: 'string' })
   userId: string;
-
-  @IsNumber()
-  @ApiProperty({ type: 'number' })
-  currentPage: number;
-
-  @IsNumber()
-  @ApiProperty({ type: 'string' })
-  pageSize: number;
 }
