@@ -8,7 +8,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Contributor } from '@core/type/contributor';
-import { AuthBody } from '@core/type/doc/auth';
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -51,7 +50,7 @@ export class CreateProjectBody {
   intro: string;
 }
 
-export class UpdateProjectBody extends AuthBody {
+export class UpdateProjectBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
@@ -71,4 +70,18 @@ export class UpdateProjectBody extends AuthBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   intro: string;
+}
+
+export class ProjectListQuery {
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  userId: string;
+
+  @IsNumber()
+  @ApiProperty({ type: 'number' })
+  currentPage: number;
+
+  @IsNumber()
+  @ApiProperty({ type: 'string' })
+  pageSize: number;
 }
