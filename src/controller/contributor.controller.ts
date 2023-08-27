@@ -4,14 +4,12 @@ import {
   Delete,
   Get,
   Inject,
-  Param,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
 import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
-import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import {
   ContributorListQuery,

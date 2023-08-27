@@ -7,8 +7,6 @@ import {
   DeleteContributorsBody,
   UpdateContributorsBody,
 } from '@core/type/doc/contributor';
-import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ContributorService {
