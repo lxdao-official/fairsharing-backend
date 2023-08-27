@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import { Contributor, Permission } from '@core/type/contributor';
+import { DeleteContributorsBody } from '@core/type/doc/contributor';
 
 @Injectable()
 export class ContributorService {
@@ -16,10 +17,14 @@ export class ContributorService {
     });
   }
 
-  async deleteContributor(projectId: string) {
-    return this.prisma.contributor.update({
+  async deleteContributor(body: DeleteContributorsBody) {
+    const { projectId, contributors } = body;
+    return this.prisma.contributor.updateMany({
       where: {
-        id: projectId,
+        projectId,
+        id: {
+          in: contributors,
+        },
       },
       data: {
         deleted: true,

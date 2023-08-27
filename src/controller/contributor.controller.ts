@@ -13,7 +13,10 @@ import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
-import { ContributorListQuery } from '@core/type/doc/contributor';
+import {
+  ContributorListQuery,
+  DeleteContributorsBody,
+} from '@core/type/doc/contributor';
 
 @Controller('contributor')
 export class ContributorController {
@@ -28,9 +31,9 @@ export class ContributorController {
     return CoreApiResponse.success(list);
   }
 
-  @Delete(':projectId/delete')
-  async deleteContributor(@Param('projectId') projectId: string) {
-    await this.contributorService.deleteContributor(projectId);
+  @Delete('/delete')
+  async deleteContributor(@Body() body: DeleteContributorsBody) {
+    await this.contributorService.deleteContributor(body);
     return CoreApiResponse.success();
   }
 
