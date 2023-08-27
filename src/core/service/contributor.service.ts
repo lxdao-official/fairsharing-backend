@@ -3,10 +3,11 @@ import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import { Contributor, Permission } from '@core/type/contributor';
 import {
+  CreateContributorsBody,
   DeleteContributorsBody,
   UpdateContributorsBody,
 } from '@core/type/doc/contributor';
-import { UpdateProjectBody } from '@core/type/doc/project';
+import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { plainToClass } from 'class-transformer';
 
 @Injectable()
@@ -53,6 +54,18 @@ export class ContributorService {
     return this.prisma.$transaction(fn);
   }
 
+  async createContributors(body: CreateContributorsBody) {
+    const { contributors, projectId } = body;
+    this.checkWalletUnique(contributors);
+    this.checkOwnerPermission(contributors, true);
+    return this.prisma.contributor.createMany({
+      data: contributors.map((item) => ({
+        ...item,
+        projectId,
+      })),
+    });
+  }
+
   checkWalletUnique(contributors: Contributor[]) {
     const contributorsSet = new Set();
     contributors.forEach((item) => {
@@ -66,11 +79,12 @@ export class ContributorService {
     }
   }
 
-  checkOwnerPermission(contributors: Contributor[]) {
+  checkOwnerPermission(contributors: Contributor[], isAdd = false) {
     const ownerContributor = contributors.filter(
       (item) => Number(item.permission) === Permission.Owner,
     );
-    if (ownerContributor.length !== 1) {
+    const amount = isAdd ? 0 : 1;
+    if (ownerContributor.length !== amount) {
       throw new HttpException(
         Code.OWNER_PERMISSION_ERROR.message,
         Code.OWNER_PERMISSION_ERROR.code,

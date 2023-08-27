@@ -28,3 +28,15 @@ export class UpdateContributorsBody {
   @ApiProperty({ isArray: true })
   contributors: Contributor[];
 }
+
+export class CreateContributorsBody {
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  projectId: string;
+
+  @ArrayNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ApiProperty({ isArray: true })
+  contributors: Contributor[];
+}

@@ -15,6 +15,7 @@ import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import {
   ContributorListQuery,
+  CreateContributorsBody,
   DeleteContributorsBody,
   UpdateContributorsBody,
 } from '@core/type/doc/contributor';
@@ -45,5 +46,8 @@ export class ContributorController {
   }
 
   @Post('create')
-  async createContributor(@Body() body: CreateProjectBody) {}
+  async createContributor(@Body() body: CreateContributorsBody) {
+    await this.contributorService.createContributors(body);
+    return CoreApiResponse.success();
+  }
 }
