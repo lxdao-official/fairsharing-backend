@@ -8,7 +8,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { ContributorService } from '@service/contributor.service';
 import {
@@ -21,7 +20,7 @@ import {
 @Controller('contributor')
 export class ContributorController {
   constructor(
-    @Inject(ProjectService)
+    @Inject(ContributorService)
     private readonly contributorService: ContributorService,
   ) {}
   @Get('list')
