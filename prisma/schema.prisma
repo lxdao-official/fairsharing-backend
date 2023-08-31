@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Project {
-  id             String         @id @default(uuid())
+  id             String         @id
   address        String         @unique
   name           String
   intro          String?
@@ -50,8 +50,7 @@ model Contribution {
   credit    Int
   toIds     String[]
   status    Status   @default(UNREADY)
-  argee     Int      @default(0)
-  disagree  Int      @default(0)
+  uId       String?
   owner     User     @relation(fields: [ownerId], references: [id])
   ownerId   String
   project   Project  @relation(fields: [projectId], references: [id])
