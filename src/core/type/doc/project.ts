@@ -19,6 +19,11 @@ export class CreateProjectBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
+  address: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
   symbol: string;
 
   @IsNotEmpty()
@@ -32,9 +37,9 @@ export class CreateProjectBody {
   network: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty({ type: 'number' })
-  votePeriod: number;
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  votePeriod: string;
 
   @ArrayNotEmpty()
   @IsArray()
@@ -58,9 +63,9 @@ export class UpdateProjectBody {
   pointConsensus: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty({ type: 'number' })
-  votePeriod: number;
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  votePeriod: string;
 
   @IsNotEmpty()
   @IsString()

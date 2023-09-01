@@ -3,7 +3,6 @@ import { PrismaService } from 'nestjs-prisma';
 import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProjectService {
@@ -45,12 +44,38 @@ export class ProjectService {
   }
 
   async createProject(body: CreateProjectBody) {
-    const { contributors, ...data } = body;
+    const {
+      contributors,
+      address,
+      name,
+      logo,
+      pointConsensus,
+      network,
+      votePeriod,
+      symbol,
+      intro,
+    } = body;
     this.contributorService.checkWalletUnique(contributors);
     this.contributorService.checkOwnerPermission(contributors);
-    return this.prisma.project.create({
+    const users = await Promise.all(
+      contributors.map((item) =>
+        this.prisma.user.findFirst({
+          where: {
+            wallet: item.wallet,
+          },
+        }),
+      ),
+    );
+    await this.prisma.project.create({
       data: {
-        ...plainToClass(CreateProjectBody, data),
+        id: address,
+        name,
+        logo,
+        pointConsensus,
+        network,
+        votePeriod,
+        symbol,
+        intro,
         contributors: {
           createMany: {
             data: [
@@ -59,6 +84,7 @@ export class ProjectService {
                 permission: Number(item.permission),
                 role: item.role,
                 nickName: item.nickName,
+                userId: users.find((user) => user.wallet === item.wallet)?.id,
               })),
             ],
           },
@@ -88,11 +114,17 @@ export class ProjectService {
   }
 
   async editProject(projectId: string, body: UpdateProjectBody) {
+    const { pointConsensus, votePeriod, logo, intro } = body;
     return this.prisma.project.update({
       where: {
         id: projectId,
       },
-      data: plainToClass(UpdateProjectBody, body),
+      data: {
+        pointConsensus,
+        votePeriod,
+        logo,
+        intro,
+      },
     });
   }
 }
