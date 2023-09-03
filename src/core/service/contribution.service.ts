@@ -56,13 +56,18 @@ export class ContributionService {
   }
 
   async createContributors(body: CreateContributionBody) {
-    const { detail, projectId, uId, proof, toIds, credit } = body;
+    const { detail, projectId, uId, proof, toIds, credit, operatorId } = body;
     const project = await this.prisma.contribution.findFirst({
       where: {
         id: projectId,
       },
     });
-    if (!project) {
+    const user = await this.prisma.contributor.findFirst({
+      where: {
+        id: operatorId,
+      },
+    });
+    if (!project || !user) {
       throw new HttpException(
         Code.NOT_FOUND_ERROR.message,
         Code.NOT_FOUND_ERROR.code,
@@ -82,7 +87,7 @@ export class ContributionService {
         },
         owner: {
           connect: {
-            id: projectId,
+            id: operatorId,
           },
         },
       },

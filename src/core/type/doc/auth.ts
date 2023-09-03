@@ -5,10 +5,10 @@ export class AuthBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  signature: string;
+  signature?: string;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  contributorId: string;
+  operatorId?: string;
 }

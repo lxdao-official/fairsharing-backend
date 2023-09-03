@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Contributor } from '@core/type/contributor';
+import { AuthBody } from '@core/type/doc/auth';
 
 export class ContributionListQuery {
   @IsNotEmpty()
@@ -23,7 +24,7 @@ export class UpdateContributionStateBody {
   type: 'claim';
 }
 
-export class CreateContributionBody {
+export class CreateContributionBody extends AuthBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
