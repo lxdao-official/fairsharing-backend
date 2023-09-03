@@ -23,9 +23,8 @@ export class ContributionController {
     private readonly contributionService: ContributionService,
   ) {}
   @Get('list')
-  async geContributionList(@Query() data: ContributionListQuery) {
-    const { projectId } = data;
-    const list = await this.contributionService.getContributionList(projectId);
+  async geContributionList(@Query() query: ContributionListQuery) {
+    const list = await this.contributionService.getContributionList(query);
     return CoreApiResponse.success(list);
   }
 

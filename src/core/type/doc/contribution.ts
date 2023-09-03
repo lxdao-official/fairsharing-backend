@@ -9,8 +9,9 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Contributor } from '@core/type/contributor';
 import { AuthBody } from '@core/type/doc/auth';
+import { PaginateQuery } from '@core/type/doc/common';
 
-export class ContributionListQuery {
+export class ContributionListQuery extends PaginateQuery {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })

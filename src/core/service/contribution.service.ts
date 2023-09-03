@@ -2,22 +2,32 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import {
+  ContributionListQuery,
   CreateContributionBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { Status } from '@prisma/client';
+import { paginate } from '@core/utils/paginator';
 
 @Injectable()
 export class ContributionService {
   constructor(private prisma: PrismaService) {}
 
-  async getContributionList(projectId: string) {
-    return this.prisma.contribution.findMany({
-      where: {
-        deleted: false,
-        projectId,
+  async getContributionList(query: ContributionListQuery) {
+    const { projectId, currentPage, pageSize } = query;
+    return paginate(
+      this.prisma.contribution,
+      {
+        where: {
+          deleted: false,
+          projectId,
+        },
       },
-    });
+      {
+        pageSize,
+        currentPage,
+      },
+    );
   }
 
   async updateContributionState(
