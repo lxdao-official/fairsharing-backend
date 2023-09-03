@@ -24,7 +24,6 @@ export class DeleteContributorsBody {
 export class UpdateContributorsBody {
   @ArrayNotEmpty()
   @IsArray()
-  @ValidateNested({ each: true })
   @ApiProperty({ isArray: true })
   contributors: Contributor[];
 }
