@@ -5,6 +5,8 @@ import LogsMiddleware from '@/src/middleware/logs';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/src/middleware/exceptionFilter';
 import { ContributorModule } from '@/src/module/contributor.module';
+import { UserModule } from '@/src/module/user.module';
+import { ContributionModule } from '@/src/module/contribution.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { ContributorModule } from '@/src/module/contributor.module';
     }),
     ProjectModule,
     ContributorModule,
+    UserModule,
+    ContributionModule,
   ],
   providers: [
     {
