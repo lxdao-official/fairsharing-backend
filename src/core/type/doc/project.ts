@@ -6,9 +6,11 @@ import {
   IsArray,
   ArrayNotEmpty,
   ValidateNested,
+  IsOptional,
 } from 'class-validator';
 import { Contributor } from '@core/type/contributor';
 import { PaginateQuery } from '@core/type/doc/common';
+import { Type } from 'class-transformer';
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -33,6 +35,7 @@ export class CreateProjectBody {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({ type: 'number' })
   network: number;
 
@@ -47,10 +50,12 @@ export class CreateProjectBody {
   @ApiProperty({ isArray: true })
   contributors: Contributor[];
 
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string', required: false })
   logo: string;
 
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string', required: false })
   intro: string;
@@ -79,6 +84,7 @@ export class UpdateProjectBody {
 }
 
 export class ProjectListQuery extends PaginateQuery {
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string' })
   userId: string;

@@ -1,5 +1,4 @@
 import {
-  ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
   IsNumber,
@@ -7,9 +6,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Contributor } from '@core/type/contributor';
 import { AuthBody } from '@core/type/doc/auth';
 import { PaginateQuery } from '@core/type/doc/common';
+import { Type } from 'class-transformer';
 
 export class ContributionListQuery extends PaginateQuery {
   @IsNotEmpty()
@@ -48,6 +47,7 @@ export class CreateContributionBody extends AuthBody {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({ type: 'number' })
   credit: number;
 
