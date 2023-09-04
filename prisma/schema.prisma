@@ -15,7 +15,7 @@ model Project {
   name           String
   intro          String?
   logo           String?
-  votePeriod     DateTime
+  votePeriod     String
   network        Int
   symbol         String
   pointConsensus String

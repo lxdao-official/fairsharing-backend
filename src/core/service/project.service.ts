@@ -66,7 +66,7 @@ export class ProjectService {
         }),
       ),
     );
-    await this.prisma.project.create({
+    return this.prisma.project.create({
       data: {
         id: address,
         name,
@@ -79,13 +79,18 @@ export class ProjectService {
         contributors: {
           createMany: {
             data: [
-              ...contributors.map((item) => ({
-                wallet: item.wallet,
-                permission: Number(item.permission),
-                role: item.role,
-                nickName: item.nickName,
-                userId: users.find((user) => user.wallet === item.wallet)?.id,
-              })),
+              ...contributors.map((item) => {
+                const userId = users.find(
+                  (user) => user?.wallet === item.wallet,
+                )?.id;
+                return {
+                  wallet: item.wallet,
+                  permission: Number(item.permission),
+                  role: item.role,
+                  nickName: item.nickName,
+                  userId,
+                };
+              }),
             ],
           },
         },
