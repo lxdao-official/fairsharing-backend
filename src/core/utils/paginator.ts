@@ -1,11 +1,9 @@
 export interface PaginatedResult<T> {
-  data: {
-    list: T;
-    total: number;
-    totalPage: number;
-    currentPage: number;
-    pageSize: number;
-  };
+  list: T;
+  total: number;
+  totalPage: number;
+  currentPage: number;
+  pageSize: number;
 }
 
 export type PaginateOptions = {
@@ -40,13 +38,11 @@ export const paginator = (
     const totalPage = Math.ceil(total / pageSize);
 
     return {
-      data: {
-        list: data,
-        total,
-        totalPage,
-        currentPage: page,
-        pageSize,
-      },
+      list: data,
+      total,
+      totalPage,
+      currentPage: page,
+      pageSize,
     };
   };
 };
