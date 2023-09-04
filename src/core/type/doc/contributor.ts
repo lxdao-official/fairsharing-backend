@@ -16,7 +16,6 @@ export class ContributorListQuery {
 export class DeleteContributorsBody {
   @ArrayNotEmpty()
   @IsArray()
-  @ValidateNested({ each: true })
   @ApiProperty({ isArray: true })
   contributorIds: string[];
 }
@@ -25,7 +24,7 @@ export class UpdateContributorsBody {
   @ArrayNotEmpty()
   @IsArray()
   @ApiProperty({ isArray: true })
-  contributors: Contributor[];
+  contributors: Omit<Contributor, 'wallet'>[];
 }
 
 export class CreateContributorsBody {

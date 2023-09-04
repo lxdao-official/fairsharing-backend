@@ -27,7 +27,7 @@ export class Code {
   // Contributors
   static WALLET_UNIQUE_ERROR: CodeDescription = {
     code: 10100,
-    message: 'Contributors wallet must be unique.',
+    message: 'Contributor wallet must be unique.',
   };
 
   // Project

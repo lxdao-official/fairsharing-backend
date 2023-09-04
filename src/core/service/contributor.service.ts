@@ -56,6 +56,15 @@ export class ContributorService {
     const { contributors, projectId } = body;
     this.checkWalletUnique(contributors);
     this.checkOwnerPermission(contributors, true);
+    const currentContributors = await this.getContributorList(projectId);
+    contributors.forEach((item) => {
+      if (currentContributors.find((i) => i.wallet === item.wallet)) {
+        throw new HttpException(
+          Code.WALLET_UNIQUE_ERROR.message,
+          Code.WALLET_UNIQUE_ERROR.code,
+        );
+      }
+    });
     return this.prisma.contributor.createMany({
       data: contributors.map((item) => ({
         ...item,

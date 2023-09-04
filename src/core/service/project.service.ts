@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
+import { Code } from '@core/code';
 
 @Injectable()
 export class ProjectService {
@@ -99,12 +100,23 @@ export class ProjectService {
   }
 
   async getProjectDetail(projectId: string) {
-    return this.prisma.project.findFirst({
+    return this.getProject(projectId);
+  }
+
+  async getProject(projectId: string, needThrow = false) {
+    const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
         deleted: false,
       },
     });
+    if (!project && needThrow) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    return projectId;
   }
 
   async deleteProject(projectId: string) {
@@ -120,6 +132,7 @@ export class ProjectService {
 
   async editProject(projectId: string, body: UpdateProjectBody) {
     const { pointConsensus, votePeriod, logo, intro } = body;
+    await this.getProject(projectId, true);
     return this.prisma.project.update({
       where: {
         id: projectId,
