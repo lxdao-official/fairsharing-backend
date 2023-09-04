@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserBody {
@@ -13,4 +13,11 @@ export class UpdateUserBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   name: string;
+}
+
+export class SignupBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  wallet: string;
 }

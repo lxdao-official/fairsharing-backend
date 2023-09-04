@@ -4,12 +4,13 @@ import {
   Get,
   Inject,
   Param,
+  Post,
   Put,
   Query,
 } from '@nestjs/common';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { UserService } from '@service/user.service';
-import { UpdateUserBody } from '@core/type/doc/user';
+import { SignupBody, UpdateUserBody } from '@core/type/doc/user';
 
 @Controller('user')
 export class UserController {
@@ -20,6 +21,12 @@ export class UserController {
   @Get('info')
   async getUserInfo(@Query('wallet') wallet: string) {
     const user = await this.userService.getUserInfo(wallet);
+    return CoreApiResponse.success(user);
+  }
+
+  @Post('signup')
+  async signup(@Body() body: SignupBody) {
+    const user = await this.userService.signup(body.wallet);
     return CoreApiResponse.success(user);
   }
 

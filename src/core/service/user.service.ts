@@ -8,12 +8,12 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async getUserInfo(wallet: string) {
-    const user = await this.findUserByWallet(wallet);
-    if (!user) {
-      const user = await this.createUser(wallet);
-      await this.associateContributor(wallet, user.id);
-      return user;
-    }
+    return this.findUserByWallet(wallet);
+  }
+
+  async signup(wallet: string) {
+    const user = await this.createUser(wallet);
+    await this.associateContributor(wallet, user.id);
     return user;
   }
 
