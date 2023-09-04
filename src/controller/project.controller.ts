@@ -24,9 +24,9 @@ export class ProjectController {
   ) {}
   @Get('list')
   async getProjectList(@Query() data: ProjectListQuery) {
-    const { userId, pageSize, currentPage } = data;
-    if (userId) {
-      const list = await this.projectService.getProjectListByUserId(userId);
+    const { wallet, pageSize, currentPage } = data;
+    if (wallet) {
+      const list = await this.projectService.getProjectListByWallet(wallet);
       return CoreApiResponse.success(list);
     }
     const list = await this.projectService.getProjectList(

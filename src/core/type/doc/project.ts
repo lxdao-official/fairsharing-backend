@@ -87,5 +87,5 @@ export class ProjectListQuery extends PaginateQuery {
   @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string' })
-  userId: string;
+  wallet: string;
 }

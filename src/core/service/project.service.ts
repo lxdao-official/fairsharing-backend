@@ -26,10 +26,10 @@ export class ProjectService {
     );
   }
 
-  async getProjectListByUserId(userId: string) {
+  async getProjectListByWallet(wallet: string) {
     const data = await this.prisma.contributor.findMany({
       where: {
-        userId,
+        wallet,
         deleted: false,
       },
     });
