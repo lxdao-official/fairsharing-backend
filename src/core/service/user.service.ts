@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { UpdateUserBody } from '@core/type/doc/user';
+import { Code } from '@core/code';
 
 @Injectable()
 export class UserService {
@@ -45,6 +46,17 @@ export class UserService {
 
   async editUser(body: UpdateUserBody, userId: string) {
     const { avatar, name, bio } = body;
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
     return this.prisma.user.update({
       where: {
         id: userId,
