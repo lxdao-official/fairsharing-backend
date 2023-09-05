@@ -2,6 +2,7 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -51,8 +52,8 @@ export class CreateContributionBody extends AuthBody {
   @ApiProperty({ type: 'number' })
   credit: number;
 
+  @IsOptional()
   @IsArray()
-  @ValidateNested({ each: true })
   @ApiProperty({ isArray: true })
   toIds: string[];
 }

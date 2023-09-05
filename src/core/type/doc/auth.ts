@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AuthBody {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string' })
   signature?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string' })
   operatorId?: string;
