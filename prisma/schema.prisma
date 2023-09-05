@@ -27,13 +27,12 @@ model Project {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  name          String?
-  avatar        String?
-  bio           String?
-  wallet        String         @unique
-  contributions Contribution[]
-  contributors  Contributor[]
+  id           String        @id @default(uuid())
+  name         String?
+  avatar       String?
+  bio          String?
+  wallet       String        @unique
+  contributors Contributor[]
 }
 
 enum Status {
@@ -43,33 +42,34 @@ enum Status {
 }
 
 model Contribution {
-  id        String   @id @default(uuid())
+  id        String      @id @default(uuid())
   detail    String
   proof     String
   credit    Int
   toIds     String[]
-  status    Status   @default(UNREADY)
-  uId       String?  @unique
-  owner     User     @relation(fields: [ownerId], references: [id])
+  status    Status      @default(UNREADY)
+  uId       String?     @unique
+  owner     Contributor @relation(fields: [ownerId], references: [id])
   ownerId   String
-  project   Project  @relation(fields: [projectId], references: [id])
+  project   Project     @relation(fields: [projectId], references: [id])
   projectId String
-  createAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deleted   Boolean  @default(false)
+  createAt  DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deleted   Boolean     @default(false)
 }
 
 model Contributor {
-  id         String   @id @default(uuid())
-  nickName   String
-  wallet     String
-  user       User?    @relation(fields: [userId], references: [id])
-  userId     String?
-  project    Project  @relation(fields: [projectId], references: [id])
-  projectId  String
-  permission Int
-  role       String
-  createAt   DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  deleted    Boolean  @default(false)
+  id           String         @id @default(uuid())
+  nickName     String
+  wallet       String
+  user         User?          @relation(fields: [userId], references: [id])
+  userId       String?
+  project      Project        @relation(fields: [projectId], references: [id])
+  projectId    String
+  permission   Int
+  role         String
+  createAt     DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deleted      Boolean        @default(false)
+  Contribution Contribution[]
 }
