@@ -42,7 +42,7 @@ export class ContributionController {
 
   @Post('create')
   async createContribution(@Body() body: CreateContributionBody) {
-    await this.contributionService.createContributors(body);
+    await this.contributionService.createContribution(body);
     return CoreApiResponse.success();
   }
 }

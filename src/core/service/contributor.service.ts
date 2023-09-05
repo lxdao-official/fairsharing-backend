@@ -18,6 +18,11 @@ export class ContributorService {
         deleted: false,
         projectId,
       },
+      include: {
+        user: {
+          select: { avatar: true },
+        },
+      },
     });
   }
 

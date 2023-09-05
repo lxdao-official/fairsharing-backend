@@ -65,7 +65,7 @@ export class ContributionService {
     });
   }
 
-  async createContributors(body: CreateContributionBody) {
+  async createContribution(body: CreateContributionBody) {
     const { detail, projectId, uId, proof, toIds, credit, operatorId } = body;
     const project = await this.prisma.project.findFirst({
       where: {
