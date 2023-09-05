@@ -41,4 +41,9 @@ export class Code {
     code: 10300,
     message: 'Contribution status flow failure.',
   };
+
+  static CONTRIBUTION_UID_ERROR: CodeDescription = {
+    code: 10301,
+    message: 'Contribution uid missing.',
+  };
 }

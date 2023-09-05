@@ -22,7 +22,12 @@ export class UpdateContributionStateBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  type: 'claim';
+  type: 'claim' | 'ready';
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  uId: string;
 }
 
 export class CreateContributionBody extends AuthBody {
@@ -35,11 +40,6 @@ export class CreateContributionBody extends AuthBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   proof: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({ type: 'string' })
-  uId: string;
 
   @IsNotEmpty()
   @IsString()

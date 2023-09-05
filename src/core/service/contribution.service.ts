@@ -34,12 +34,17 @@ export class ContributionService {
     contributionId: string,
     body: UpdateContributionStateBody,
   ) {
-    const { type } = body;
+    const { type, uId } = body;
     const contribution = await this.prisma.contribution.findFirst({
       where: {
         id: contributionId,
       },
     });
+    const statusMap = {
+      claim: Status.CLAIM,
+      ready: Status.READY,
+    };
+    const data = { status: statusMap[type] };
     if (!contribution) {
       throw new HttpException(
         Code.NOT_FOUND_ERROR.message,
@@ -52,21 +57,31 @@ export class ContributionService {
         Code.CONTRIBUTION_STATUS_ERROR.code,
       );
     }
-    const statusMap = {
-      claim: Status.CLAIM,
-    };
+    if (type === 'ready') {
+      if (contribution.status !== Status.UNREADY) {
+        throw new HttpException(
+          Code.CONTRIBUTION_STATUS_ERROR.message,
+          Code.CONTRIBUTION_STATUS_ERROR.code,
+        );
+      }
+      if (!uId) {
+        throw new HttpException(
+          Code.CONTRIBUTION_UID_ERROR.message,
+          Code.CONTRIBUTION_UID_ERROR.code,
+        );
+      }
+      data['uId'] = uId;
+    }
     return this.prisma.contribution.update({
       where: {
         id: contributionId,
       },
-      data: {
-        status: statusMap[type],
-      },
+      data,
     });
   }
 
   async createContribution(body: CreateContributionBody) {
-    const { detail, projectId, uId, proof, toIds, credit, operatorId } = body;
+    const { detail, projectId, proof, toIds, credit, operatorId } = body;
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
@@ -87,12 +102,10 @@ export class ContributionService {
       data: {
         detail,
         proof,
-        uId,
         toIds,
         credit,
         projectId,
         ownerId: operatorId,
-        status: Status.READY,
       },
     });
   }
