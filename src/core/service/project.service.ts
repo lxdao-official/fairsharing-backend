@@ -116,7 +116,7 @@ export class ProjectService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
-    return projectId;
+    return project;
   }
 
   async deleteProject(projectId: string) {
