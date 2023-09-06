@@ -26,8 +26,8 @@ export class EasService {
 
     const hash = ethers.keccak256(
       ethers.AbiCoder.defaultAbiCoder().encode(
-        ['address', 'uint256', 'uint64'],
-        [wallet, chainId, cId],
+        ['uint256', 'address', 'uint64'],
+        [chainId, wallet, cId],
       ),
     );
 
