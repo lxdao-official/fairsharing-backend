@@ -11,7 +11,7 @@ export class EasService {
     private configService: ConfigService,
   ) {}
 
-  async getSignature(wallet: string, cId: number) {
+  async getSignature(wallet: string, cId: number, chainId: number) {
     const contribution = await this.prisma.contribution.findFirst({
       where: {
         id: cId,
@@ -27,7 +27,7 @@ export class EasService {
     const hash = ethers.keccak256(
       ethers.AbiCoder.defaultAbiCoder().encode(
         ['address', 'uint256', 'uint64'],
-        [wallet, contribution.projectId, cId],
+        [wallet, chainId, cId],
       ),
     );
 

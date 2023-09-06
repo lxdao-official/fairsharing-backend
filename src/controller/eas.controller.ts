@@ -12,8 +12,9 @@ export class EasController {
   async getSignature(
     @Query('wallet') wallet: string,
     @Query('cId', ParseIntPipe) cId: number,
+    @Query('chainId', ParseIntPipe) chainId: number,
   ) {
-    const signature = await this.easService.getSignature(wallet, cId);
+    const signature = await this.easService.getSignature(wallet, cId, chainId);
     return CoreApiResponse.success(signature);
   }
 }
