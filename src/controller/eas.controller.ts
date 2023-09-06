@@ -1,6 +1,7 @@
-import { Controller, Get, Inject, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { EasService } from '@service/eas.service';
+import { GetSignatureQuery } from '@core/type/doc/eas';
 
 @Controller('eas')
 export class EasController {
@@ -9,12 +10,8 @@ export class EasController {
     private readonly easService: EasService,
   ) {}
   @Get('signature')
-  async getSignature(
-    @Query('wallet') wallet: string,
-    @Query('cId', ParseIntPipe) cId: number,
-    @Query('chainId', ParseIntPipe) chainId: number,
-  ) {
-    const signature = await this.easService.getSignature(wallet, cId, chainId);
+  async getSignature(@Query() query: GetSignatureQuery) {
+    const signature = await this.easService.getSignature(query);
     return CoreApiResponse.success(signature);
   }
 }

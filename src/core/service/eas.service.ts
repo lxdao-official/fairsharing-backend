@@ -3,6 +3,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import { ethers } from 'ethers';
 import { ConfigService } from '@nestjs/config';
+import { GetSignatureQuery } from '@core/type/doc/eas';
 
 @Injectable()
 export class EasService {
@@ -11,7 +12,8 @@ export class EasService {
     private configService: ConfigService,
   ) {}
 
-  async getSignature(wallet: string, cId: number, chainId: number) {
+  async getSignature(query: GetSignatureQuery) {
+    const { chainId, cId, wallet } = query;
     const contribution = await this.prisma.contribution.findFirst({
       where: {
         id: cId,
