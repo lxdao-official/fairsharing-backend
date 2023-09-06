@@ -7,9 +7,14 @@ import { HttpExceptionFilter } from '@/src/middleware/exceptionFilter';
 import { ContributorModule } from '@/src/module/contributor.module';
 import { UserModule } from '@/src/module/user.module';
 import { ContributionModule } from '@/src/module/contribution.module';
+import { EasModule } from '@/src/module/eas.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
@@ -25,6 +30,7 @@ import { ContributionModule } from '@/src/module/contribution.module';
     ContributorModule,
     UserModule,
     ContributionModule,
+    EasModule,
   ],
   providers: [
     {
