@@ -4,6 +4,7 @@ specifiers:
   '@ethereum-attestation-service/eas-sdk': 1.0.0-beta.0
   '@nestjs/cli': ^10.0.0
   '@nestjs/common': ^10.0.0
+  '@nestjs/config': ^3.0.1
   '@nestjs/core': ^10.0.0
   '@nestjs/platform-express': ^10.0.0
   '@nestjs/schematics': ^10.0.0
@@ -39,6 +40,7 @@ specifiers:
 dependencies:
   '@ethereum-attestation-service/eas-sdk': 1.0.0-beta.0_kg5gpyde6u3komamnnl67a6oc4
   '@nestjs/common': 10.1.3_j3td4gnlgk75ora6o6suo62byy
+  '@nestjs/config': 3.0.1_odz3pxxtydpap6sgjhrdybptni
   '@nestjs/core': 10.1.3_cbm7sg5efqqar7ntuqguk4rlum
   '@nestjs/platform-express': 10.1.3_yxajjqzwuyac646uxsfhswdv24
   '@nestjs/swagger': 7.1.7_tyc37ghlxjn6aeclgvgms3zvwu
@@ -1358,6 +1360,20 @@ packages:
       rxjs: 7.8.1
       tslib: 2.6.1
       uid: 2.0.2
+
+  /@nestjs/config/3.0.1_odz3pxxtydpap6sgjhrdybptni:
+    resolution: {integrity: sha512-a98MMkDlgUlXTv9qtDbimYfXsuafn/YZOh/S35afutr0Qc5T6KzjyWP5VjxRkv26yI2JM0RhFruByFTM6ezwHA==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
+      reflect-metadata: ^0.1.13
+    dependencies:
+      '@nestjs/common': 10.1.3_j3td4gnlgk75ora6o6suo62byy
+      dotenv: 16.3.1
+      dotenv-expand: 10.0.0
+      lodash: 4.17.21
+      reflect-metadata: 0.1.13
+      uuid: 9.0.0
+    dev: false
 
   /@nestjs/core/10.1.3_cbm7sg5efqqar7ntuqguk4rlum:
     resolution: {integrity: sha512-VzK54TuacC3Vmq3b5xTyMVTlDNJeKbjpKfV9fNqm4TbIBm8ZPo3FC0osJAbAK4XwbVvv2Flq1yA3CutasupVjw==}
@@ -3362,6 +3378,16 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /dotenv-expand/10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /dotenv/16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /ee-first/1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -6675,6 +6701,11 @@ packages:
 
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
     dev: false
 
