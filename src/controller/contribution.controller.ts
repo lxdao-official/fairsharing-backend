@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -30,7 +31,7 @@ export class ContributionController {
 
   @Put(':contributionId/updateState')
   async updateContributionState(
-    @Param('contributionId') contributionId: string,
+    @Param('contributionId', ParseIntPipe) contributionId: number,
     @Body() body: UpdateContributionStateBody,
   ) {
     await this.contributionService.updateContributionState(

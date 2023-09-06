@@ -31,7 +31,7 @@ export class ContributionService {
   }
 
   async updateContributionState(
-    contributionId: string,
+    contributionId: number,
     body: UpdateContributionStateBody,
   ) {
     const { type, uId } = body;
