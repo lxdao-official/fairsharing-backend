@@ -70,11 +70,24 @@ export class ContributorService {
         );
       }
     });
+    const users = await Promise.all(
+      contributors.map((item) =>
+        this.prisma.user.findFirst({
+          where: {
+            wallet: item.wallet,
+          },
+        }),
+      ),
+    );
     return this.prisma.contributor.createMany({
-      data: contributors.map((item) => ({
-        ...item,
-        projectId,
-      })),
+      data: contributors.map((item) => {
+        const userId = users.find((user) => user?.wallet === item.wallet)?.id;
+        return {
+          ...item,
+          projectId,
+          userId,
+        };
+      }),
     });
   }
 
