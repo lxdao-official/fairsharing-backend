@@ -103,4 +103,15 @@ export class ContributorService {
       );
     }
   }
+
+  async associateContributor(wallet: string, userId: string) {
+    return this.prisma.contributor.updateMany({
+      where: {
+        wallet,
+      },
+      data: {
+        userId,
+      },
+    });
+  }
 }
