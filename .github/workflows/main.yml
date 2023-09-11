@@ -32,9 +32,9 @@ jobs:
       - name: Deploy to dokku
         uses: appleboy/ssh-action@master
         with:
-          host: api.eips.fun
+          host: api.fairsharing.xyz
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            /home/ubuntu/apps/api.eips.fun.sh 653640199626.dkr.ecr.us-west-2.amazonaws.com/eipsfun:${{ github.sha }}
+            /home/ubuntu/apps/api.fairsharing.xyz.sh 653640199626.dkr.ecr.us-west-2.amazonaws.com/fairsharing:${{ github.sha }}
