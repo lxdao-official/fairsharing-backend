@@ -24,6 +24,7 @@ model Project {
   deleted        Boolean        @default(false)
   contributions  Contribution[]
   contributors   Contributor[]
+  MintReocrd     MintReocrd[]
 }
 
 model User {
@@ -72,4 +73,17 @@ model Contributor {
   updatedAt    DateTime       @updatedAt
   deleted      Boolean        @default(false)
   Contribution Contribution[]
+  MintReocrd   MintReocrd[]
+}
+
+model MintReocrd {
+  id            String       @id @default(uuid())
+  contributor   Contributor? @relation(fields: [contributorId], references: [id])
+  contributorId String?
+  project       Project      @relation(fields: [projectId], references: [id])
+  projectId     String
+  credit        Int
+  createAt      DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deleted       Boolean      @default(false)
 }
