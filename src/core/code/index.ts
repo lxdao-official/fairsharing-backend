@@ -46,4 +46,9 @@ export class Code {
     code: 10301,
     message: 'Contribution uid missing.',
   };
+
+  static CONTRIBUTION_CLAIM_Auth_ERROR: CodeDescription = {
+    code: 10302,
+    message: `You can't claim this contribution.`,
+  };
 }

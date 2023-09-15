@@ -18,7 +18,7 @@ export class ContributionListQuery extends PaginateQuery {
   projectId: string;
 }
 
-export class UpdateContributionStateBody {
+export class UpdateContributionStateBody extends AuthBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
