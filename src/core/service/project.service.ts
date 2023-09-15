@@ -145,4 +145,21 @@ export class ProjectService {
       },
     });
   }
+
+  async getMintRecord(projectId: string) {
+    await this.getProject(projectId, true);
+    return this.prisma.mintReocrd.findMany({
+      where: {
+        projectId,
+        deleted: false,
+      },
+      include: {
+        contributor: {
+          where: {
+            deleted: false,
+          },
+        },
+      },
+    });
+  }
 }

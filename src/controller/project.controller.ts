@@ -62,4 +62,10 @@ export class ProjectController {
     const data = await this.projectService.createProject(body);
     return CoreApiResponse.success(data);
   }
+
+  @Get(':projectId/mintRecord')
+  async getMintRecord(@Param('projectId') projectId: string) {
+    const data = await this.projectService.getMintRecord(projectId);
+    return CoreApiResponse.success(data);
+  }
 }
