@@ -72,7 +72,7 @@ export class ContributionService {
         },
       });
       if (!record) {
-        fns.push(() =>
+        fns.push(
           this.prisma.mintReocrd.create({
             data: {
               contributorId: operatorId,
@@ -82,7 +82,7 @@ export class ContributionService {
           }),
         );
       } else {
-        fns.push(() =>
+        fns.push(
           this.prisma.mintReocrd.update({
             where: {
               id: record.id,
@@ -109,7 +109,7 @@ export class ContributionService {
       }
       data['uId'] = uId;
     }
-    fns.push(() =>
+    fns.push(
       this.prisma.contribution.update({
         where: {
           id: contributionId,
