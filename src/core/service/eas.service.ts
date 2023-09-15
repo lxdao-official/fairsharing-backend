@@ -33,7 +33,7 @@ export class EasService {
       ),
     );
 
-    const key = this.configService.get('NEXT_PUBLIC__KEY');
+    const key = this.configService.get('SIGN_PRIVATE_KEY');
     const signerWallet = new ethers.Wallet(key);
     return signerWallet.signMessage(ethers.getBytes(hash));
   }
