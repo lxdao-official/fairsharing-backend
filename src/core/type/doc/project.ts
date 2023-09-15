@@ -28,7 +28,7 @@ export class CreateProjectBody {
   @ApiProperty({ type: 'string' })
   symbol: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string' })
   pointConsensus: string;

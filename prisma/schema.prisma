@@ -18,7 +18,7 @@ model Project {
   votePeriod     String
   network        Int
   symbol         String
-  pointConsensus String
+  pointConsensus String?
   createAt       DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   deleted        Boolean        @default(false)
