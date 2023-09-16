@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "dc:up": "docker-compose up --build",
     "dc:down": "docker-compose down --volumes",
-    "prisma:migrate": "pnpm prisma migrate dev --name $PRISMA_MIGRATION_NAME"
+    "prisma:migrate": "pnpm prisma migrate dev --name $PRISMA_MIGRATION_NAME",
+    "migrate:deploy": "pnpm prisma migrate deploy"
   },
   "dependencies": {
     "@ethereum-attestation-service/eas-sdk": "1.1.0-beta.3",

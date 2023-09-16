@@ -31,4 +31,4 @@ ENV PRISMA_MIGRATION_NAME=$PRISMA_MIGRATION_NAME
 
 EXPOSE 3000
 CMD [ "pnpm", "run", "start:prod" ]
-CMD [ "sh", "-c", "pnpm run prisma:migrate && pnpm run start" ]
+CMD [ "sh", "-c", "pnpm run migrate:deploy && pnpm run start" ]
