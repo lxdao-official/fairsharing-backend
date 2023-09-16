@@ -32,7 +32,7 @@ export const paginator = (
       model.findMany({
         ...args,
         orderBy: {
-          createdAt: 'desc',
+          createAt: 'desc',
         },
         take: pageSize,
         skip,
