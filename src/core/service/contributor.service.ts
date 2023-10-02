@@ -41,19 +41,52 @@ export class ContributorService {
   }
 
   async editContributor(body: UpdateContributorsBody) {
-    const { contributors } = body;
-    const fn = contributors.map((item) => {
-      return this.prisma.contributor.update({
-        where: {
-          id: item.id,
-        },
-        data: {
-          permission: item.permission,
-          nickName: item.nickName,
-          role: item.role,
-        },
-      });
+    const { contributors, projectId } = body;
+    this.checkWalletUnique(contributors);
+    this.checkOwnerPermission(contributors);
+    const currentContributors = await this.getContributorList(projectId);
+    const newContributors: Contributor[] = [];
+
+    const fn = currentContributors.map((item) => {
+      if (contributors.find((i) => i.id === item.id)) {
+        return this.prisma.contributor.update({
+          where: {
+            id: item.id,
+          },
+          data: {
+            permission: item.permission,
+            nickName: item.nickName,
+            role: item.role,
+          },
+        });
+      } else {
+        newContributors.push(item);
+      }
     });
+
+    const users = await Promise.all(
+      newContributors.map((item) =>
+        this.prisma.user.findFirst({
+          where: {
+            wallet: item.wallet,
+          },
+        }),
+      ),
+    );
+
+    fn.concat(
+      newContributors.map((item) => {
+        const userId = users.find((user) => user?.wallet === item.wallet)?.id;
+        return this.prisma.contributor.create({
+          data: {
+            ...item,
+            projectId,
+            userId,
+          },
+        });
+      }),
+    );
+
     return this.prisma.$transaction(fn);
   }
 
@@ -70,6 +103,10 @@ export class ContributorService {
         );
       }
     });
+    return this.addContributors(contributors, projectId);
+  }
+
+  async addContributors(contributors: Contributor[], projectId: string) {
     const users = await Promise.all(
       contributors.map((item) =>
         this.prisma.user.findFirst({

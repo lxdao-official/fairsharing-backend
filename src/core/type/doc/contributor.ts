@@ -24,7 +24,11 @@ export class UpdateContributorsBody {
   @ArrayNotEmpty()
   @IsArray()
   @ApiProperty({ isArray: true })
-  contributors: Omit<Contributor, 'wallet'>[];
+  contributors: Contributor[];
+
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  projectId: string;
 }
 
 export class CreateContributorsBody {
