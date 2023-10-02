@@ -131,14 +131,14 @@ export class ProjectService {
   }
 
   async editProject(projectId: string, body: UpdateProjectBody) {
-    const { pointConsensus, votePeriod, logo, intro } = body;
+    const { name, votePeriod, logo, intro } = body;
     await this.getProject(projectId, true);
     return this.prisma.project.update({
       where: {
         id: projectId,
       },
       data: {
-        pointConsensus,
+        name,
         votePeriod,
         logo,
         intro,
