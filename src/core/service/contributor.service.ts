@@ -47,8 +47,10 @@ export class ContributorService {
     const currentContributors = await this.getContributorList(projectId);
     const newContributors: Contributor[] = [];
 
-    const fn = currentContributors.map((item) => {
-      if (contributors.find((i) => i.id === item.id)) {
+    const fn = contributors.map((item) => {
+      const index = currentContributors.findIndex((i) => i.id === item.id);
+      if (index > -1) {
+        currentContributors.splice(index, 1);
         return this.prisma.contributor.update({
           where: {
             id: item.id,
@@ -82,6 +84,13 @@ export class ContributorService {
             ...item,
             projectId,
             userId,
+          },
+        });
+      }),
+      currentContributors.map((item) => {
+        return this.prisma.contributor.delete({
+          where: {
+            id: item.id,
           },
         });
       }),
