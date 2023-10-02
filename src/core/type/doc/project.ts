@@ -65,7 +65,7 @@ export class UpdateProjectBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  pointConsensus: string;
+  name: string;
 
   @IsNotEmpty()
   @IsString()
