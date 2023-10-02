@@ -47,24 +47,26 @@ export class ContributorService {
     const currentContributors = await this.getContributorList(projectId);
     const newContributors: Contributor[] = [];
 
-    const fn = contributors.map((item) => {
-      const index = currentContributors.findIndex((i) => i.id === item.id);
-      if (index > -1) {
-        currentContributors.splice(index, 1);
-        return this.prisma.contributor.update({
-          where: {
-            id: item.id,
-          },
-          data: {
-            permission: item.permission,
-            nickName: item.nickName,
-            role: item.role,
-          },
-        });
-      } else {
-        newContributors.push(item);
-      }
-    });
+    let fn = contributors
+      .map((item) => {
+        const index = currentContributors.findIndex((i) => i.id === item.id);
+        if (index > -1) {
+          currentContributors.splice(index, 1);
+          return this.prisma.contributor.update({
+            where: {
+              id: item.id,
+            },
+            data: {
+              permission: item.permission,
+              nickName: item.nickName,
+              role: item.role,
+            },
+          });
+        } else {
+          newContributors.push(item);
+        }
+      })
+      .filter((item) => item);
 
     const users = await Promise.all(
       newContributors.map((item) =>
@@ -76,7 +78,7 @@ export class ContributorService {
       ),
     );
 
-    fn.concat(
+    fn = fn.concat(
       newContributors.map((item) => {
         const userId = users.find((user) => user?.wallet === item.wallet)?.id;
         return this.prisma.contributor.create({
@@ -88,9 +90,12 @@ export class ContributorService {
         });
       }),
       currentContributors.map((item) => {
-        return this.prisma.contributor.delete({
+        return this.prisma.contributor.update({
           where: {
             id: item.id,
+          },
+          data: {
+            deleted: true,
           },
         });
       }),
