@@ -4,6 +4,7 @@ import { Code } from '@core/code';
 import {
   ContributionListQuery,
   CreateContributionBody,
+  DeleteContributionBody,
   PrepareClaimQuery,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
@@ -11,6 +12,7 @@ import { Status } from '@prisma/client';
 import { paginate } from '@core/utils/paginator';
 import { EasService } from '@service/eas.service';
 import dayjs from 'dayjs';
+import { DeleteContributorsBody } from '@core/type/doc/contributor';
 
 @Injectable()
 export class ContributionService {
@@ -153,11 +155,11 @@ export class ContributionService {
     });
   }
 
-  async prepareClaim(query: PrepareClaimQuery) {
-    const { cId, chainId } = query;
+  async prepareClaim(contributionId: number, query: PrepareClaimQuery) {
+    const { chainId } = query;
     const contribution = await this.prisma.contribution.findFirst({
       where: {
-        id: cId,
+        id: contributionId,
       },
       include: {
         project: true,
@@ -188,6 +190,38 @@ export class ContributionService {
         Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
       );
     }
-    return this.easService.getSignature(query);
+    return this.easService.getSignature(contributionId, query);
+  }
+
+  async deleteContribution(id: any, body: DeleteContributionBody) {
+    const { wallet } = body;
+    const contribution = await this.prisma.contribution.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!contribution) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    const user = await this.prisma.contributor.findFirst({
+      where: {
+        wallet,
+        projectId: contribution.projectId,
+      },
+    });
+    if (!user) {
+      throw new HttpException(Code.NO_AUTH.message, Code.NO_AUTH.code);
+    }
+    return this.prisma.contribution.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
   }
 }

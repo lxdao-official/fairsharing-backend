@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -13,6 +14,7 @@ import { CoreApiResponse } from '@core/api/coreApiResponse';
 import {
   ContributionListQuery,
   CreateContributionBody,
+  DeleteContributionBody,
   PrepareClaimQuery,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
@@ -42,8 +44,14 @@ export class ContributionController {
     return CoreApiResponse.success();
   }
   @Get(':contributionId/prepareClaim')
-  async prepareClaim(@Query() query: PrepareClaimQuery) {
-    const sign = await this.contributionService.prepareClaim(query);
+  async prepareClaim(
+    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Query() query: PrepareClaimQuery,
+  ) {
+    const sign = await this.contributionService.prepareClaim(
+      contributionId,
+      query,
+    );
     return CoreApiResponse.success(sign);
   }
 
@@ -53,5 +61,14 @@ export class ContributionController {
       body,
     );
     return CoreApiResponse.success(contribution);
+  }
+
+  @Delete(':contributionId')
+  async deleteContribution(
+    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Body() body: DeleteContributionBody,
+  ) {
+    await this.contributionService.deleteContribution(contributionId, body);
+    return CoreApiResponse.success();
   }
 }

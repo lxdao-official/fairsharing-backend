@@ -11,4 +11,9 @@ export class AuthBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   operatorId?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  wallet?: string;
 }

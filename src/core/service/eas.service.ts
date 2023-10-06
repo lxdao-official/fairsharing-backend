@@ -21,13 +21,13 @@ export class EasService {
     private configService: ConfigService,
   ) {}
 
-  async getSignature(query: PrepareClaimQuery) {
-    const { chainId, cId, wallet, toWallet } = query;
+  async getSignature(contributionId: number, query: PrepareClaimQuery) {
+    const { chainId, wallet, toWallet } = query;
 
     const hash = ethers.keccak256(
       ethers.AbiCoder.defaultAbiCoder().encode(
         ['uint256', 'address', 'address', 'uint64'],
-        [chainId, wallet, toWallet, cId],
+        [chainId, wallet, toWallet, contributionId],
       ),
     );
 

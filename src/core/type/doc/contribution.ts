@@ -4,7 +4,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthBody } from '@core/type/doc/auth';
@@ -72,10 +71,7 @@ export class PrepareClaimQuery {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({ type: 'number' })
-  cId: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty({ type: 'number' })
   chainId: number;
 }
+
+export class DeleteContributionBody extends AuthBody {}

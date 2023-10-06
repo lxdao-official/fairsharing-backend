@@ -24,6 +24,11 @@ export class Code {
     message: 'Not found.',
   };
 
+  static NO_AUTH: CodeDescription = {
+    code: 10004,
+    message: 'No Auth.',
+  };
+
   // Contributors
   static WALLET_UNIQUE_ERROR: CodeDescription = {
     code: 10100,
