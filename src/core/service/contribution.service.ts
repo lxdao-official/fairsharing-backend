@@ -193,7 +193,7 @@ export class ContributionService {
     return this.easService.getSignature(contributionId, query);
   }
 
-  async deleteContribution(id: any, body: DeleteContributionBody) {
+  async deleteContribution(id: number, body: DeleteContributionBody) {
     const { wallet } = body;
     const contribution = await this.prisma.contribution.findFirst({
       where: {
