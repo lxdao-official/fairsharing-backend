@@ -154,7 +154,7 @@ export class ContributionService {
   }
 
   async prepareClaim(query: PrepareClaimQuery) {
-    const { cId, wallet, chainId } = query;
+    const { cId, chainId } = query;
     const contribution = await this.prisma.contribution.findFirst({
       where: {
         id: cId,
@@ -188,10 +188,6 @@ export class ContributionService {
         Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
       );
     }
-    return this.easService.getSignature({
-      cId,
-      chainId,
-      wallet,
-    });
+    return this.easService.getSignature(query);
   }
 }
