@@ -12,6 +12,7 @@ import {
   EasSchemaVoteKey,
   IVoteValueEnum,
 } from '@core/type/eas';
+import { PrepareClaimQuery } from '@core/type/doc/contribution';
 
 @Injectable()
 export class EasService {
@@ -20,24 +21,13 @@ export class EasService {
     private configService: ConfigService,
   ) {}
 
-  async getSignature(query: any) {
-    const { chainId, cId, wallet } = query;
-    const contribution = await this.prisma.contribution.findFirst({
-      where: {
-        id: cId,
-      },
-    });
-    if (!contribution) {
-      throw new HttpException(
-        Code.NOT_FOUND_ERROR.message,
-        Code.NOT_FOUND_ERROR.code,
-      );
-    }
+  async getSignature(query: PrepareClaimQuery) {
+    const { chainId, cId, wallet, toWallet } = query;
 
     const hash = ethers.keccak256(
       ethers.AbiCoder.defaultAbiCoder().encode(
-        ['uint256', 'address', 'uint64'],
-        [chainId, wallet, cId],
+        ['uint256', 'address', 'address', 'uint64'],
+        [chainId, wallet, toWallet, cId],
       ),
     );
 

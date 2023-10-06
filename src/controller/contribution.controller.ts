@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Inject,
   Param,
@@ -18,7 +17,6 @@ import {
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { ContributionService } from '@service/contribution.service';
-import { GetSignatureQuery } from '@core/type/doc/eas';
 
 @Controller('contribution')
 export class ContributionController {

@@ -65,6 +65,11 @@ export class PrepareClaimQuery {
   wallet: string;
 
   @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  toWallet: string;
+
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty({ type: 'number' })
   cId: number;
