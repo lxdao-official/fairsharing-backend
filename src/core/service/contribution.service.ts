@@ -4,14 +4,17 @@ import { Code } from '@core/code';
 import {
   ContributionListQuery,
   CreateContributionBody,
+  PrepareClaimQuery,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { Status } from '@prisma/client';
 import { paginate } from '@core/utils/paginator';
+import { EasService } from '@service/eas.service';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class ContributionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private easService: EasService) {}
 
   async getContributionList(query: ContributionListQuery) {
     const { projectId, currentPage, pageSize } = query;
@@ -48,8 +51,8 @@ export class ContributionService {
     }
     if (!contribution.toIds.includes(operatorId)) {
       throw new HttpException(
-        Code.CONTRIBUTION_CLAIM_Auth_ERROR.message,
-        Code.CONTRIBUTION_CLAIM_Auth_ERROR.code,
+        Code.CONTRIBUTION_CLAIM_AUTH_ERROR.message,
+        Code.CONTRIBUTION_CLAIM_AUTH_ERROR.code,
       );
     }
     const statusMap = {
@@ -147,6 +150,48 @@ export class ContributionService {
         projectId,
         ownerId: operatorId,
       },
+    });
+  }
+
+  async prepareClaim(query: PrepareClaimQuery) {
+    const { cId, wallet, chainId } = query;
+    const contribution = await this.prisma.contribution.findFirst({
+      where: {
+        id: cId,
+      },
+      include: {
+        project: true,
+      },
+    });
+    if (!contribution) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    const isBefore = dayjs(contribution.createAt)
+      .add(Number(contribution.project.votePeriod), 'day')
+      .isBefore(dayjs());
+    if (isBefore) {
+      throw new HttpException(
+        Code.CONTRIBUTION_CLAIM_TIME_ERROR.message,
+        Code.CONTRIBUTION_CLAIM_TIME_ERROR.code,
+      );
+    }
+    const voteResult = await this.easService.getEASVoteResult(
+      contribution.uId,
+      chainId,
+    );
+    if (!voteResult) {
+      throw new HttpException(
+        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
+        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
+      );
+    }
+    return this.easService.getSignature({
+      cId,
+      chainId,
+      wallet,
     });
   }
 }

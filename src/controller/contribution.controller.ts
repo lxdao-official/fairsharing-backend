@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -13,9 +14,11 @@ import { CoreApiResponse } from '@core/api/coreApiResponse';
 import {
   ContributionListQuery,
   CreateContributionBody,
+  PrepareClaimQuery,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { ContributionService } from '@service/contribution.service';
+import { GetSignatureQuery } from '@core/type/doc/eas';
 
 @Controller('contribution')
 export class ContributionController {
@@ -39,6 +42,11 @@ export class ContributionController {
       body,
     );
     return CoreApiResponse.success();
+  }
+  @Get(':contributionId/prepareClaim')
+  async prepareClaim(@Query() query: PrepareClaimQuery) {
+    const sign = await this.contributionService.prepareClaim(query);
+    return CoreApiResponse.success(sign);
   }
 
   @Post('create')
