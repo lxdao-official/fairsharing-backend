@@ -46,7 +46,7 @@ model Contribution {
   id        Int         @id @default(autoincrement())
   detail    String
   proof     String
-  credit    Int
+  credit    Float
   toIds     String[]
   status    Status      @default(UNREADY)
   uId       String?     @unique
