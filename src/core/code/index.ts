@@ -47,8 +47,18 @@ export class Code {
     message: 'Contribution uid missing.',
   };
 
-  static CONTRIBUTION_CLAIM_Auth_ERROR: CodeDescription = {
+  static CONTRIBUTION_CLAIM_AUTH_ERROR: CodeDescription = {
     code: 10302,
     message: `You can't claim this contribution.`,
+  };
+
+  static CONTRIBUTION_CLAIM_TIME_ERROR: CodeDescription = {
+    code: 10303,
+    message: `You can't claim this contribution.`,
+  };
+
+  static CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR: CodeDescription = {
+    code: 10304,
+    message: `The number of votes doesn't comply with the rules.`,
   };
 }
