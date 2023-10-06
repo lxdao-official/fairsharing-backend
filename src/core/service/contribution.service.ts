@@ -11,8 +11,7 @@ import {
 import { Status } from '@prisma/client';
 import { paginate } from '@core/utils/paginator';
 import { EasService } from '@service/eas.service';
-import dayjs from 'dayjs';
-import { DeleteContributorsBody } from '@core/type/doc/contributor';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ContributionService {
