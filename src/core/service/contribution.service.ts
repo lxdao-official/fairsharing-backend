@@ -193,7 +193,7 @@ export class ContributionService {
   }
 
   async deleteContribution(id: number, body: DeleteContributionBody) {
-    const { wallet } = body;
+    const { operatorId } = body;
     const contribution = await this.prisma.contribution.findFirst({
       where: {
         id,
@@ -205,13 +205,7 @@ export class ContributionService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
-    const user = await this.prisma.contributor.findFirst({
-      where: {
-        wallet,
-        projectId: contribution.projectId,
-      },
-    });
-    if (!user) {
+    if (contribution.ownerId !== operatorId) {
       throw new HttpException(Code.NO_AUTH.message, Code.NO_AUTH.code);
     }
     return this.prisma.contribution.update({
