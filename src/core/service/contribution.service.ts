@@ -43,6 +43,9 @@ export class ContributionService {
       where: {
         id: contributionId,
       },
+      include: {
+        project: true,
+      },
     });
     if (!contribution) {
       throw new HttpException(
@@ -50,7 +53,13 @@ export class ContributionService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
-    if (!contribution.toIds.includes(operatorId)) {
+    const user = await this.prisma.contributor.findFirst({
+      where: {
+        projectId: contribution.projectId,
+        id: operatorId,
+      },
+    });
+    if (!user) {
       throw new HttpException(
         Code.CONTRIBUTION_CLAIM_AUTH_ERROR.message,
         Code.CONTRIBUTION_CLAIM_AUTH_ERROR.code,
