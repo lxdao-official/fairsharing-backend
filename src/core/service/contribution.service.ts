@@ -173,7 +173,7 @@ export class ContributionService {
     const isBefore = dayjs(contribution.createAt)
       .add(Number(contribution.project.votePeriod), 'day')
       .isBefore(dayjs());
-    if (isBefore) {
+    if (!isBefore) {
       throw new HttpException(
         Code.CONTRIBUTION_CLAIM_TIME_ERROR.message,
         Code.CONTRIBUTION_CLAIM_TIME_ERROR.code,
