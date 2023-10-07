@@ -62,11 +62,11 @@ export class EasService {
 		}
 	`;
     const { data } = await axios.post<{
-      attestations: EasAttestation<EasSchemaVoteKey>[];
+      data: { attestations: EasAttestation<EasSchemaVoteKey>[] };
     }>(this.getGraphEndpoint(chainId), {
       query,
     });
-    const easVoteList = data.attestations.map((item) => ({
+    const easVoteList = data.data.attestations.map((item) => ({
       ...item,
       decodedDataJson: JSON.parse(
         item.decodedDataJson as string,
