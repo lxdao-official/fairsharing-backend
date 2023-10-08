@@ -89,3 +89,10 @@ export class ProjectListQuery extends PaginateQuery {
   @ApiProperty({ type: 'string' })
   wallet: string;
 }
+
+export class MintRecordQuery {
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  wallet?: string;
+}

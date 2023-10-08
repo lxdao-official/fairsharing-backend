@@ -1,6 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
+import {
+  CreateProjectBody,
+  MintRecordQuery,
+  UpdateProjectBody,
+} from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
 import { Code } from '@core/code';
@@ -146,8 +150,19 @@ export class ProjectService {
     });
   }
 
-  async getMintRecord(projectId: string) {
+  async getMintRecord(projectId: string, query: MintRecordQuery) {
     await this.getProject(projectId, true);
+    if (query.wallet) {
+      return this.prisma.mintReocrd.findFirst({
+        where: {
+          projectId,
+          deleted: false,
+          contributor: {
+            wallet: query.wallet,
+          },
+        },
+      });
+    }
     return this.prisma.mintReocrd.findMany({
       where: {
         projectId,
