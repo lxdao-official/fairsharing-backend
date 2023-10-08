@@ -70,6 +70,6 @@ export class ProjectController {
     @Query() query: MintRecordQuery,
   ) {
     const data = await this.projectService.getMintRecord(projectId, query);
-    return CoreApiResponse.success(data);
+    return CoreApiResponse.success(Array.isArray(data) ? data : [data]);
   }
 }
