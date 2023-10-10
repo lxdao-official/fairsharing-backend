@@ -30,12 +30,12 @@ export class UserController {
     return CoreApiResponse.success(user);
   }
 
-  @Put('/:userId/edit')
+  @Put('/:wallet/edit')
   async editContributor(
     @Body() body: UpdateUserBody,
-    @Param('userId') userId: string,
+    @Param('userId') wallet: string,
   ) {
-    const user = await this.userService.editUser(body, userId);
+    const user = await this.userService.editUser(body, wallet);
     return CoreApiResponse.success(user);
   }
 }

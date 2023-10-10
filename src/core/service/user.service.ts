@@ -37,11 +37,11 @@ export class UserService {
     });
   }
 
-  async editUser(body: UpdateUserBody, userId: string) {
+  async editUser(body: UpdateUserBody, wallet: string) {
     const { avatar, name, bio } = body;
     const user = await this.prisma.user.findFirst({
       where: {
-        id: userId,
+        wallet,
       },
     });
     if (!user) {
@@ -52,7 +52,7 @@ export class UserService {
     }
     return this.prisma.user.update({
       where: {
-        id: userId,
+        wallet,
       },
       data: {
         avatar,
