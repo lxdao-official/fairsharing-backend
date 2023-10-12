@@ -1,3 +1,5 @@
+import { CoreApiResponse } from '@core/api/coreApiResponse';
+import { SignupBody, UpdateUserBody } from '@core/type/doc/user';
 import {
   Body,
   Controller,
@@ -8,9 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { UserService } from '@service/user.service';
-import { SignupBody, UpdateUserBody } from '@core/type/doc/user';
 
 @Controller('user')
 export class UserController {
@@ -33,7 +33,7 @@ export class UserController {
   @Put('/:wallet/edit')
   async editContributor(
     @Body() body: UpdateUserBody,
-    @Param('userId') wallet: string,
+    @Param('wallet') wallet: string,
   ) {
     const user = await this.userService.editUser(body, wallet);
     return CoreApiResponse.success(user);
