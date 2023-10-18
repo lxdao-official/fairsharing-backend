@@ -163,8 +163,8 @@ export class ContributionService {
     });
   }
 
-  async prepareClaim(contributionIds: string, query: PrepareClaimQuery) {
-    const cIds = contributionIds.split(',').map((item) => Number(item));
+  async prepareClaim(query: PrepareClaimQuery) {
+    const cIds = query.contributionIds.split(',').map((item) => Number(item));
     const { chainId } = query;
     const contributions = await this.prisma.contribution.findMany({
       where: {
