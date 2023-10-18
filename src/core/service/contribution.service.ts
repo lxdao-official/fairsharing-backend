@@ -1,5 +1,3 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import {
   ContributionListQuery,
@@ -8,10 +6,12 @@ import {
   PrepareClaimQuery,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
-import { Status } from '@prisma/client';
 import { paginate } from '@core/utils/paginator';
+import { HttpException, Injectable } from '@nestjs/common';
+import { Status } from '@prisma/client';
 import { EasService } from '@service/eas.service';
 import * as dayjs from 'dayjs';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class ContributionService {
@@ -163,42 +163,53 @@ export class ContributionService {
     });
   }
 
-  async prepareClaim(contributionId: number, query: PrepareClaimQuery) {
+  async prepareClaim(contributionIds: string, query: PrepareClaimQuery) {
+    const cIds = contributionIds.split(',').map((item) => Number(item));
     const { chainId } = query;
-    const contribution = await this.prisma.contribution.findFirst({
+    const contributions = await this.prisma.contribution.findMany({
       where: {
-        id: contributionId,
+        id: {
+          in: cIds,
+        },
       },
       include: {
         project: true,
       },
     });
-    if (!contribution) {
+    if (contributions.length !== cIds.length) {
       throw new HttpException(
         Code.NOT_FOUND_ERROR.message,
         Code.NOT_FOUND_ERROR.code,
       );
     }
-    const isBefore = dayjs(contribution.createAt)
-      .add(Number(contribution.project.votePeriod), 'day')
-      .isBefore(dayjs());
-    if (!isBefore) {
-      throw new HttpException(
-        Code.CONTRIBUTION_CLAIM_TIME_ERROR.message,
-        Code.CONTRIBUTION_CLAIM_TIME_ERROR.code,
-      );
+    for (const contribution of contributions) {
+      const isBefore = dayjs(contribution.createAt)
+        .add(Number(contribution.project.votePeriod), 'day')
+        .isBefore(dayjs());
+      if (!isBefore) {
+        throw new HttpException(
+          Code.CONTRIBUTION_CLAIM_TIME_ERROR.message,
+          Code.CONTRIBUTION_CLAIM_TIME_ERROR.code,
+        );
+      }
     }
-    const voteResult = await this.easService.getEASVoteResult(
-      contribution.uId,
-      chainId,
+    const voteResults = await Promise.all(
+      contributions.map((item) =>
+        this.easService.getEASVoteResult(item.uId, chainId),
+      ),
     );
-    if (!voteResult) {
+    if (voteResults.some((item) => !item)) {
       throw new HttpException(
         Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
         Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
       );
     }
-    return this.easService.getSignature(contributionId, query);
+    const signs = [];
+    for (const contribution of contributions) {
+      const sign = await this.easService.getSignature(contribution.id, query);
+      signs.push(sign);
+    }
+    return signs;
   }
 
   async deleteContribution(id: number, body: DeleteContributionBody) {

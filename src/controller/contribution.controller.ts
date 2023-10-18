@@ -1,3 +1,11 @@
+import { CoreApiResponse } from '@core/api/coreApiResponse';
+import {
+  ContributionListQuery,
+  CreateContributionBody,
+  DeleteContributionBody,
+  PrepareClaimQuery,
+  UpdateContributionStateBody,
+} from '@core/type/doc/contribution';
 import {
   Body,
   Controller,
@@ -10,14 +18,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CoreApiResponse } from '@core/api/coreApiResponse';
-import {
-  ContributionListQuery,
-  CreateContributionBody,
-  DeleteContributionBody,
-  PrepareClaimQuery,
-  UpdateContributionStateBody,
-} from '@core/type/doc/contribution';
 import { ContributionService } from '@service/contribution.service';
 
 @Controller('contribution')
@@ -45,11 +45,11 @@ export class ContributionController {
   }
   @Get(':contributionId/prepareClaim')
   async prepareClaim(
-    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Param('contributionIds') contributionIds: string,
     @Query() query: PrepareClaimQuery,
   ) {
     const sign = await this.contributionService.prepareClaim(
-      contributionId,
+      contributionIds,
       query,
     );
     return CoreApiResponse.success(sign);
