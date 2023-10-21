@@ -13,6 +13,7 @@ import { ProjectService } from '@core/service/project.service';
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import {
   CreateProjectBody,
+  MintRecordQuery,
   ProjectListQuery,
   UpdateProjectBody,
 } from '@core/type/doc/project';
@@ -61,5 +62,14 @@ export class ProjectController {
   async createProject(@Body() body: CreateProjectBody) {
     const data = await this.projectService.createProject(body);
     return CoreApiResponse.success(data);
+  }
+
+  @Get(':projectId/mintRecord')
+  async getMintRecord(
+    @Param('projectId') projectId: string,
+    @Query() query: MintRecordQuery,
+  ) {
+    const data = await this.projectService.getMintRecord(projectId, query);
+    return CoreApiResponse.success(Array.isArray(data) ? data : [data]);
   }
 }

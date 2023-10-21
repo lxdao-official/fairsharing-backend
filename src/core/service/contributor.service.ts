@@ -41,19 +41,66 @@ export class ContributorService {
   }
 
   async editContributor(body: UpdateContributorsBody) {
-    const { contributors } = body;
-    const fn = contributors.map((item) => {
-      return this.prisma.contributor.update({
-        where: {
-          id: item.id,
-        },
-        data: {
-          permission: item.permission,
-          nickName: item.nickName,
-          role: item.role,
-        },
-      });
-    });
+    const { contributors, projectId } = body;
+    this.checkWalletUnique(contributors);
+    this.checkOwnerPermission(contributors);
+    const currentContributors = await this.getContributorList(projectId);
+    const newContributors: Contributor[] = [];
+
+    let fn = contributors
+      .map((item) => {
+        const index = currentContributors.findIndex((i) => i.id === item.id);
+        if (index > -1) {
+          currentContributors.splice(index, 1);
+          return this.prisma.contributor.update({
+            where: {
+              id: item.id,
+            },
+            data: {
+              permission: item.permission,
+              nickName: item.nickName,
+              role: item.role,
+            },
+          });
+        } else {
+          newContributors.push(item);
+        }
+      })
+      .filter((item) => item);
+
+    const users = await Promise.all(
+      newContributors.map((item) =>
+        this.prisma.user.findFirst({
+          where: {
+            wallet: item.wallet,
+          },
+        }),
+      ),
+    );
+
+    fn = fn.concat(
+      newContributors.map((item) => {
+        const userId = users.find((user) => user?.wallet === item.wallet)?.id;
+        return this.prisma.contributor.create({
+          data: {
+            ...item,
+            projectId,
+            userId,
+          },
+        });
+      }),
+      currentContributors.map((item) => {
+        return this.prisma.contributor.update({
+          where: {
+            id: item.id,
+          },
+          data: {
+            deleted: true,
+          },
+        });
+      }),
+    );
+
     return this.prisma.$transaction(fn);
   }
 
@@ -70,11 +117,28 @@ export class ContributorService {
         );
       }
     });
+    return this.addContributors(contributors, projectId);
+  }
+
+  async addContributors(contributors: Contributor[], projectId: string) {
+    const users = await Promise.all(
+      contributors.map((item) =>
+        this.prisma.user.findFirst({
+          where: {
+            wallet: item.wallet,
+          },
+        }),
+      ),
+    );
     return this.prisma.contributor.createMany({
-      data: contributors.map((item) => ({
-        ...item,
-        projectId,
-      })),
+      data: contributors.map((item) => {
+        const userId = users.find((user) => user?.wallet === item.wallet)?.id;
+        return {
+          ...item,
+          projectId,
+          userId,
+        };
+      }),
     });
   }
 
@@ -102,5 +166,16 @@ export class ContributorService {
         Code.OWNER_PERMISSION_ERROR.code,
       );
     }
+  }
+
+  async associateContributor(wallet: string, userId: string) {
+    return this.prisma.contributor.updateMany({
+      where: {
+        wallet,
+      },
+      data: {
+        userId,
+      },
+    });
   }
 }

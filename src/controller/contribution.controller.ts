@@ -1,6 +1,15 @@
+import { CoreApiResponse } from '@core/api/coreApiResponse';
+import {
+  ContributionListQuery,
+  CreateContributionBody,
+  DeleteContributionBody,
+  PrepareClaimQuery,
+  UpdateContributionStateBody,
+} from '@core/type/doc/contribution';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -9,12 +18,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CoreApiResponse } from '@core/api/coreApiResponse';
-import {
-  ContributionListQuery,
-  CreateContributionBody,
-  UpdateContributionStateBody,
-} from '@core/type/doc/contribution';
 import { ContributionService } from '@service/contribution.service';
 
 @Controller('contribution')
@@ -40,6 +43,11 @@ export class ContributionController {
     );
     return CoreApiResponse.success();
   }
+  @Get('prepareClaim')
+  async prepareClaim(@Query() query: PrepareClaimQuery) {
+    const sign = await this.contributionService.prepareClaim(query);
+    return CoreApiResponse.success(sign);
+  }
 
   @Post('create')
   async createContribution(@Body() body: CreateContributionBody) {
@@ -47,5 +55,14 @@ export class ContributionController {
       body,
     );
     return CoreApiResponse.success(contribution);
+  }
+
+  @Delete(':contributionId')
+  async deleteContribution(
+    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Body() body: DeleteContributionBody,
+  ) {
+    await this.contributionService.deleteContribution(contributionId, body);
+    return CoreApiResponse.success();
   }
 }

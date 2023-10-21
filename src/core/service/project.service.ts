@@ -1,6 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateProjectBody, UpdateProjectBody } from '@core/type/doc/project';
+import {
+  CreateProjectBody,
+  MintRecordQuery,
+  UpdateProjectBody,
+} from '@core/type/doc/project';
 import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
 import { Code } from '@core/code';
@@ -131,17 +135,45 @@ export class ProjectService {
   }
 
   async editProject(projectId: string, body: UpdateProjectBody) {
-    const { pointConsensus, votePeriod, logo, intro } = body;
+    const { name, votePeriod, logo, intro } = body;
     await this.getProject(projectId, true);
     return this.prisma.project.update({
       where: {
         id: projectId,
       },
       data: {
-        pointConsensus,
+        name,
         votePeriod,
         logo,
         intro,
+      },
+    });
+  }
+
+  async getMintRecord(projectId: string, query: MintRecordQuery) {
+    await this.getProject(projectId, true);
+    if (query.wallet) {
+      return this.prisma.mintReocrd.findFirst({
+        where: {
+          projectId,
+          deleted: false,
+          contributor: {
+            wallet: query.wallet,
+          },
+        },
+      });
+    }
+    return this.prisma.mintReocrd.findMany({
+      where: {
+        projectId,
+        deleted: false,
+      },
+      include: {
+        contributor: {
+          where: {
+            deleted: false,
+          },
+        },
       },
     });
   }

@@ -28,7 +28,7 @@ export class CreateProjectBody {
   @ApiProperty({ type: 'string' })
   symbol: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: 'string' })
   pointConsensus: string;
@@ -65,7 +65,7 @@ export class UpdateProjectBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  pointConsensus: string;
+  name: string;
 
   @IsNotEmpty()
   @IsString()
@@ -88,4 +88,11 @@ export class ProjectListQuery extends PaginateQuery {
   @IsString()
   @ApiProperty({ type: 'string' })
   wallet: string;
+}
+
+export class MintRecordQuery {
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  wallet?: string;
 }

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Contribution" ALTER COLUMN "credit" SET DATA TYPE DOUBLE PRECISION;

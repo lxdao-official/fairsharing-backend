@@ -18,12 +18,13 @@ model Project {
   votePeriod     String
   network        Int
   symbol         String
-  pointConsensus String
+  pointConsensus String?
   createAt       DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   deleted        Boolean        @default(false)
   contributions  Contribution[]
   contributors   Contributor[]
+  MintReocrd     MintReocrd[]
 }
 
 model User {
@@ -45,7 +46,7 @@ model Contribution {
   id        Int         @id @default(autoincrement())
   detail    String
   proof     String
-  credit    Int
+  credit    Float
   toIds     String[]
   status    Status      @default(UNREADY)
   uId       String?     @unique
@@ -72,4 +73,17 @@ model Contributor {
   updatedAt    DateTime       @updatedAt
   deleted      Boolean        @default(false)
   Contribution Contribution[]
+  MintReocrd   MintReocrd[]
+}
+
+model MintReocrd {
+  id            String       @id @default(uuid())
+  contributor   Contributor? @relation(fields: [contributorId], references: [id])
+  contributorId String?
+  project       Project      @relation(fields: [projectId], references: [id])
+  projectId     String
+  credit        Int
+  createAt      DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deleted       Boolean      @default(false)
 }

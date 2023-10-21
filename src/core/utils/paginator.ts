@@ -31,6 +31,9 @@ export const paginator = (
       model.count({ where: args.where }),
       model.findMany({
         ...args,
+        orderBy: {
+          createAt: 'desc',
+        },
         take: pageSize,
         skip,
       }),
