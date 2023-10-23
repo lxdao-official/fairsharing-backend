@@ -36,9 +36,9 @@ export class Code {
   };
 
   // Project
-  static OWNER_PERMISSION_ERROR: CodeDescription = {
+  static ADMIN_PERMISSION_ERROR: CodeDescription = {
     code: 10200,
-    message: 'Project must have only one owner.',
+    message: 'Project must have one admin.',
   };
 
   // Contribution
