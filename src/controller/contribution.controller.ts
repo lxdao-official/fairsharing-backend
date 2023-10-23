@@ -43,15 +43,9 @@ export class ContributionController {
     );
     return CoreApiResponse.success();
   }
-  @Get(':contributionId/prepareClaim')
-  async prepareClaim(
-    @Param('contributionIds') contributionIds: string,
-    @Query() query: PrepareClaimQuery,
-  ) {
-    const sign = await this.contributionService.prepareClaim(
-      contributionIds,
-      query,
-    );
+  @Get('prepareClaim')
+  async prepareClaim(@Query() query: PrepareClaimQuery) {
+    const sign = await this.contributionService.prepareClaim(query);
     return CoreApiResponse.success(sign);
   }
 

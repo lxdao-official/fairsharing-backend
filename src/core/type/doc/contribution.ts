@@ -1,3 +1,7 @@
+import { AuthBody } from '@core/type/doc/auth';
+import { PaginateQuery } from '@core/type/doc/common';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsNotEmpty,
@@ -5,10 +9,6 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { AuthBody } from '@core/type/doc/auth';
-import { PaginateQuery } from '@core/type/doc/common';
-import { Type } from 'class-transformer';
 
 export class ContributionListQuery extends PaginateQuery {
   @IsNotEmpty()
@@ -72,6 +72,11 @@ export class PrepareClaimQuery {
   @IsNumber()
   @ApiProperty({ type: 'number' })
   chainId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  contributionIds: string;
 }
 
 export class DeleteContributionBody extends AuthBody {}
