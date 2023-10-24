@@ -159,7 +159,7 @@ export class ContributorService {
     const adminContributor = contributors.filter(
       (item) => Number(item.permission) === Permission.Admin,
     );
-    if (adminContributor.length !== 1) {
+    if (adminContributor.length < 1) {
       throw new HttpException(
         Code.ADMIN_PERMISSION_ERROR.message,
         Code.ADMIN_PERMISSION_ERROR.code,
