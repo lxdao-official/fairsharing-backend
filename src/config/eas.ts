@@ -24,6 +24,17 @@ export const EAS_CHAIN_CONFIGS: EASChainConfig[] = [
     graphQLEndpoint: 'https://sepolia.easscan.org/graphql',
   },
   {
+    chainId: 10,
+    chainName: 'optimism',
+    subdomain: 'optimism.',
+    version: '1.0.1',
+    contractAddress: '0x4200000000000000000000000000000000000021',
+    schemaRegistryAddress: '0x4200000000000000000000000000000000000020',
+    etherscanURL: 'https://optimism.easscan.org',
+    rpcProvider: 'https://opt-mainnet.g.alchemy.com/v2',
+    graphQLEndpoint: 'https://optimism.easscan.org/graphql'
+  },
+  {
     chainId: 1,
     chainName: 'mainnet',
     subdomain: '',
