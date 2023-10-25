@@ -1,14 +1,14 @@
-import { MiddlewareConsumer, Module, Logger } from '@nestjs/common';
+import { HttpExceptionFilter } from '@/src/middleware/exceptionFilter';
+import LogsMiddleware from '@/src/middleware/logs';
+import { ContributionModule } from '@/src/module/contribution.module';
+import { ContributorModule } from '@/src/module/contributor.module';
+import { EasModule } from '@/src/module/eas.module';
+import { UserModule } from '@/src/module/user.module';
+import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { ProjectModule } from './module/project.module';
-import LogsMiddleware from '@/src/middleware/logs';
-import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from '@/src/middleware/exceptionFilter';
-import { ContributorModule } from '@/src/module/contributor.module';
-import { UserModule } from '@/src/module/user.module';
-import { ContributionModule } from '@/src/module/contribution.module';
-import { EasModule } from '@/src/module/eas.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [

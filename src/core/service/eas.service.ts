@@ -1,18 +1,21 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
-import { Code } from '@core/code';
-import { ethers } from 'ethers';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EAS_CHAIN_CONFIGS, EasSchemaMap } from '@/src/config/eas';
 import axios from 'axios';
+import { ethers } from 'ethers';
+import { PrismaService } from 'nestjs-prisma';
+import {
+  EAS_CHAIN_CONFIGS,
+  EasSchemaMap,
+  MainEasSchemaMap,
+} from '../../config/eas';
+import { PrepareClaimQuery } from '../type/doc/contribution';
 import {
   EasAttestation,
   EasAttestationData,
   EasAttestationDecodedData,
   EasSchemaVoteKey,
   IVoteValueEnum,
-} from '@core/type/eas';
-import { PrepareClaimQuery } from '@core/type/doc/contribution';
+} from '../type/eas';
 
 @Injectable()
 export class EasService {
@@ -37,12 +40,13 @@ export class EasService {
   }
 
   async getEASVoteResult(uId: string, chainId?: number) {
+    const easMap = chainId === 10 ? MainEasSchemaMap : EasSchemaMap;
     const query = `
 		query Attestations {
 		  attestations(
 			where: {
 			  schemaId: {
-				equals: "${EasSchemaMap.vote}"
+				equals: "${easMap.vote}"
 			  }
 			  refUID: { 
 			   	equals: "${uId}"
