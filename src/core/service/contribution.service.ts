@@ -193,17 +193,17 @@ export class ContributionService {
         );
       }
     }
-    const voteResults = await Promise.all(
-      contributions.map((item) =>
-        this.easService.getEASVoteResult(item.uId, chainId),
-      ),
-    );
-    if (voteResults.some((item) => !item)) {
-      throw new HttpException(
-        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
-        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
-      );
-    }
+    // const voteResults = await Promise.all(
+    //   contributions.map((item) =>
+    //     this.easService.getEASVoteResult(item.uId, chainId),
+    //   ),
+    // );
+    // if (voteResults.some((item) => !item)) {
+    //   throw new HttpException(
+    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
+    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
+    //   );
+    // }
     const signs = [];
     for (const contribution of contributions) {
       const sign = await this.easService.getSignature(contribution.id, query);
