@@ -1,5 +1,3 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
 import { Code } from '@core/code';
 import { Contributor, Permission } from '@core/type/contributor';
 import {
@@ -7,6 +5,8 @@ import {
   DeleteContributorsBody,
   UpdateContributorsBody,
 } from '@core/type/doc/contributor';
+import { HttpException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class ContributorService {
@@ -43,7 +43,7 @@ export class ContributorService {
   async editContributor(body: UpdateContributorsBody) {
     const { contributors, projectId } = body;
     this.checkWalletUnique(contributors);
-    this.checkOwnerPermission(contributors);
+    this.checkAdminPermission(contributors);
     const currentContributors = await this.getContributorList(projectId);
     const newContributors: Contributor[] = [];
 
@@ -107,7 +107,7 @@ export class ContributorService {
   async createContributors(body: CreateContributorsBody) {
     const { contributors, projectId } = body;
     this.checkWalletUnique(contributors);
-    this.checkOwnerPermission(contributors, true);
+    this.checkAdminPermission(contributors);
     const currentContributors = await this.getContributorList(projectId);
     contributors.forEach((item) => {
       if (currentContributors.find((i) => i.wallet === item.wallet)) {
@@ -155,15 +155,14 @@ export class ContributorService {
     }
   }
 
-  checkOwnerPermission(contributors: Contributor[], isAdd = false) {
-    const ownerContributor = contributors.filter(
-      (item) => Number(item.permission) === Permission.Owner,
+  checkAdminPermission(contributors: Contributor[]) {
+    const adminContributor = contributors.filter(
+      (item) => Number(item.permission) === Permission.Admin,
     );
-    const amount = isAdd ? 0 : 1;
-    if (ownerContributor.length !== amount) {
+    if (adminContributor.length < 1) {
       throw new HttpException(
-        Code.OWNER_PERMISSION_ERROR.message,
-        Code.OWNER_PERMISSION_ERROR.code,
+        Code.ADMIN_PERMISSION_ERROR.message,
+        Code.ADMIN_PERMISSION_ERROR.code,
       );
     }
   }

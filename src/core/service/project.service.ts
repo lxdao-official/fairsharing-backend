@@ -1,13 +1,13 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
+import { Code } from '@core/code';
 import {
   CreateProjectBody,
   MintRecordQuery,
   UpdateProjectBody,
 } from '@core/type/doc/project';
-import { ContributorService } from '@service/contributor.service';
 import { paginate } from '@core/utils/paginator';
-import { Code } from '@core/code';
+import { HttpException, Injectable } from '@nestjs/common';
+import { ContributorService } from '@service/contributor.service';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class ProjectService {
@@ -61,7 +61,7 @@ export class ProjectService {
       intro,
     } = body;
     this.contributorService.checkWalletUnique(contributors);
-    this.contributorService.checkOwnerPermission(contributors);
+    this.contributorService.checkAdminPermission(contributors);
     const users = await Promise.all(
       contributors.map((item) =>
         this.prisma.user.findFirst({
