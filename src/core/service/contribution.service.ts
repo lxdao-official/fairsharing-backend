@@ -3,7 +3,7 @@ import {
   ContributionListQuery,
   CreateContributionBody,
   DeleteContributionBody,
-  PrepareClaimQuery,
+  PrepareClaimBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { paginate } from '@core/utils/paginator';
@@ -163,9 +163,9 @@ export class ContributionService {
     });
   }
 
-  async prepareClaim(query: PrepareClaimQuery) {
-    const cIds = query.contributionIds.split(',').map((item) => Number(item));
-    const { chainId } = query;
+  async prepareClaim(body: PrepareClaimBody) {
+    const { chainId, contributionIds, toWallets, wallet } = body;
+    const cIds = contributionIds.split(',').map((item) => Number(item));
     const contributions = await this.prisma.contribution.findMany({
       where: {
         id: {
@@ -193,20 +193,26 @@ export class ContributionService {
         );
       }
     }
-    // const voteResults = await Promise.all(
-    //   contributions.map((item) =>
-    //     this.easService.getEASVoteResult(item.uId, chainId),
-    //   ),
-    // );
-    // if (voteResults.some((item) => !item)) {
-    //   throw new HttpException(
-    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
-    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
-    //   );
-    // }
+    const voteResults = await Promise.all(
+      contributions.map((item) =>
+        this.easService.getEASVoteResult(item.uId, chainId),
+      ),
+    );
+    if (voteResults.some((item) => !item)) {
+      throw new HttpException(
+        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
+        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
+      );
+    }
     const signs = [];
-    for (const contribution of contributions) {
-      const sign = await this.easService.getSignature(contribution.id, query);
+    let i = 0;
+    for (const cId of cIds) {
+      const sign = await this.easService.getSignature(
+        cId,
+        chainId,
+        toWallets[i++],
+        wallet,
+      );
       signs.push(sign);
     }
     return signs;

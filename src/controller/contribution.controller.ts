@@ -3,7 +3,7 @@ import {
   ContributionListQuery,
   CreateContributionBody,
   DeleteContributionBody,
-  PrepareClaimQuery,
+  PrepareClaimBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import {
@@ -43,8 +43,8 @@ export class ContributionController {
     );
     return CoreApiResponse.success();
   }
-  @Get('prepareClaim')
-  async prepareClaim(@Query() query: PrepareClaimQuery) {
+  @Post('prepareClaim')
+  async prepareClaim(@Body() query: PrepareClaimBody) {
     const sign = await this.contributionService.prepareClaim(query);
     return CoreApiResponse.success(sign);
   }

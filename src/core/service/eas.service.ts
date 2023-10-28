@@ -8,7 +8,6 @@ import {
   EasSchemaMap,
   MainEasSchemaMap,
 } from '../../config/eas';
-import { PrepareClaimQuery } from '../type/doc/contribution';
 import {
   EasAttestation,
   EasAttestationData,
@@ -24,9 +23,12 @@ export class EasService {
     private configService: ConfigService,
   ) {}
 
-  async getSignature(contributionId: number, query: PrepareClaimQuery) {
-    const { chainId, wallet, toWallet } = query;
-
+  async getSignature(
+    contributionId: number,
+    chainId: number,
+    toWallet: string,
+    wallet: string,
+  ) {
     const hash = ethers.keccak256(
       ethers.AbiCoder.defaultAbiCoder().encode(
         ['uint256', 'address', 'address', 'uint64'],
