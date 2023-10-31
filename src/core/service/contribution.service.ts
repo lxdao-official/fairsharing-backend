@@ -78,17 +78,18 @@ export class ContributionService {
           Code.CONTRIBUTION_STATUS_ERROR.code,
         );
       }
-      const { projectId, credit } = contribution;
+      const { projectId, credit, toIds } = contribution;
+      const contributorId = toIds[0];
       const record = await this.prisma.mintReocrd.findFirst({
         where: {
-          contributorId: operatorId,
+          contributorId,
         },
       });
       if (!record) {
         fns.push(
           this.prisma.mintReocrd.create({
             data: {
-              contributorId: operatorId,
+              contributorId,
               credit,
               projectId,
             },
