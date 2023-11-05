@@ -3,6 +3,7 @@ import { ProjectService } from '@core/service/project.service';
 import {
   CreateContributionTypeBody,
   CreateProjectBody,
+  DeleteContributionTypeBody,
   MintRecordQuery,
   ProjectListQuery,
   UpdateContributionTypeBody,
@@ -65,16 +66,16 @@ export class ProjectController {
     return CoreApiResponse.success(data);
   }
 
-  @Put(':projectId/editContributionType')
-  async editContributionType(
-    @Param('projectId') projectId: string,
-    @Body() body: UpdateContributionTypeBody,
-  ) {
-    const data = await this.projectService.editContributionType(
-      projectId,
-      body,
-    );
+  @Put('/editContributionType')
+  async editContributionType(@Body() body: UpdateContributionTypeBody) {
+    const data = await this.projectService.editContributionType(body);
     return CoreApiResponse.success(data);
+  }
+
+  @Delete('/deleteContributionType')
+  async deleteContributionType(@Body() body: DeleteContributionTypeBody) {
+    await this.projectService.deleteContributionType(body.id);
+    return CoreApiResponse.success(null);
   }
 
   @Delete(':projectId/delete')

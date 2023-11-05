@@ -148,3 +148,10 @@ export class UpdateContributionTypeBody extends CreateContributionTypeBody {
   @ApiProperty({ type: 'string' })
   id: string;
 }
+
+export class DeleteContributionTypeBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  id: string;
+}

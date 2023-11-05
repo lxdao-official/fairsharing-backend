@@ -238,16 +238,12 @@ export class ProjectService {
     });
   }
 
-  async editContributionType(
-    projectId: string,
-    body: UpdateContributionTypeBody,
-  ) {
+  async editContributionType(body: UpdateContributionTypeBody) {
     const { id, name, color } = body;
     const type = await this.prisma.contributionType.findFirst({
       where: {
         id,
         deleted: false,
-        projectId,
       },
     });
     if (!type) {
@@ -263,6 +259,17 @@ export class ProjectService {
       data: {
         name,
         color,
+      },
+    });
+  }
+
+  async deleteContributionType(id: string) {
+    return this.prisma.contributionType.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
       },
     });
   }
