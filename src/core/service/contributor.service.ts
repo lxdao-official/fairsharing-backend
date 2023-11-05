@@ -5,12 +5,18 @@ import {
   DeleteContributorsBody,
   UpdateContributorsBody,
 } from '@core/type/doc/contributor';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { VoteSystem } from '@prisma/client';
+import { ProjectService } from '@service/project.service';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class ContributorService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => ProjectService))
+    private projectService: ProjectService,
+  ) {}
 
   async getContributorList(projectId: string) {
     return this.prisma.contributor.findMany({
@@ -42,6 +48,16 @@ export class ContributorService {
 
   async editContributor(body: UpdateContributorsBody) {
     const { contributors, projectId } = body;
+    const project = await this.projectService.getProjectDetail(projectId);
+    if (!project) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    if (project.voteSystem === VoteSystem.WEIGHT) {
+      this.checkWeightAmount(contributors);
+    }
     this.checkWalletUnique(contributors);
     this.checkAdminPermission(contributors);
     const currentContributors = await this.getContributorList(projectId);

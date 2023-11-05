@@ -5,7 +5,7 @@ import {
   UpdateProjectBody,
 } from '@core/type/doc/project';
 import { paginate } from '@core/utils/paginator';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { VoteSystem } from '@prisma/client';
 import { ContributorService } from '@service/contributor.service';
 import { PrismaService } from 'nestjs-prisma';
@@ -14,6 +14,7 @@ import { PrismaService } from 'nestjs-prisma';
 export class ProjectService {
   constructor(
     private prisma: PrismaService,
+    @Inject(forwardRef(() => ContributorService))
     private contributorService: ContributorService,
   ) {}
   async getProjectList(pageSize: number, currentPage: number) {
