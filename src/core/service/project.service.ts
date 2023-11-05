@@ -3,6 +3,7 @@ import {
   CreateContributionTypeBody,
   CreateProjectBody,
   MintRecordQuery,
+  UpdateContributionTypeBody,
   UpdateProjectBody,
 } from '@core/type/doc/project';
 import { paginate } from '@core/utils/paginator';
@@ -233,6 +234,35 @@ export class ProjectService {
         name,
         color,
         projectId,
+      },
+    });
+  }
+
+  async editContributionType(
+    projectId: string,
+    body: UpdateContributionTypeBody,
+  ) {
+    const { id, name, color } = body;
+    const type = await this.prisma.contributionType.findFirst({
+      where: {
+        id,
+        deleted: false,
+        projectId,
+      },
+    });
+    if (!type) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    return this.prisma.contributionType.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        color,
       },
     });
   }

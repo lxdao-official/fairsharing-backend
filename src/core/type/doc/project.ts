@@ -141,3 +141,10 @@ export class CreateContributionTypeBody {
   @ApiProperty({ type: 'string' })
   color: string;
 }
+
+export class UpdateContributionTypeBody extends CreateContributionTypeBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  id: string;
+}

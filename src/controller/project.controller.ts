@@ -5,6 +5,7 @@ import {
   CreateProjectBody,
   MintRecordQuery,
   ProjectListQuery,
+  UpdateContributionTypeBody,
   UpdateProjectBody,
 } from '@core/type/doc/project';
 import {
@@ -58,6 +59,18 @@ export class ProjectController {
     @Body() body: CreateContributionTypeBody,
   ) {
     const data = await this.projectService.createContributionType(
+      projectId,
+      body,
+    );
+    return CoreApiResponse.success(data);
+  }
+
+  @Put(':projectId/editContributionType')
+  async editContributionType(
+    @Param('projectId') projectId: string,
+    @Body() body: UpdateContributionTypeBody,
+  ) {
+    const data = await this.projectService.editContributionType(
       projectId,
       body,
     );
