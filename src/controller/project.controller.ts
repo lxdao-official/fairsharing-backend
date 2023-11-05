@@ -1,6 +1,7 @@
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import { ProjectService } from '@core/service/project.service';
 import {
+  CreateContributionTypeBody,
   CreateProjectBody,
   MintRecordQuery,
   ProjectListQuery,
@@ -49,6 +50,18 @@ export class ProjectController {
       projectId,
     );
     return CoreApiResponse.success(typeList);
+  }
+
+  @Post(':projectId/createContributionType')
+  async createContributionType(
+    @Param('projectId') projectId: string,
+    @Body() body: CreateContributionTypeBody,
+  ) {
+    const data = await this.projectService.createContributionType(
+      projectId,
+      body,
+    );
+    return CoreApiResponse.success(data);
   }
 
   @Delete(':projectId/delete')

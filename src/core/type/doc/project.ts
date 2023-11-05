@@ -129,3 +129,15 @@ export class MintRecordQuery {
   @ApiProperty({ type: 'string' })
   wallet?: string;
 }
+
+export class CreateContributionTypeBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  color: string;
+}

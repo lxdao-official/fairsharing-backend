@@ -1,5 +1,6 @@
 import { Code } from '@core/code';
 import {
+  CreateContributionTypeBody,
   CreateProjectBody,
   MintRecordQuery,
   UpdateProjectBody,
@@ -209,6 +210,29 @@ export class ProjectService {
             deleted: false,
           },
         },
+      },
+    });
+  }
+
+  async createContributionType(
+    projectId: string,
+    body: CreateContributionTypeBody,
+  ) {
+    const { name, color } = body;
+    await this.getProject(projectId, true);
+    const typeList = await this.getContributionTypeList(projectId);
+    const index = typeList.findIndex((item) => item.name === name);
+    if (index > -1) {
+      throw new HttpException(
+        Code.CONTRIBUTION_TYPE_EXIST_ERROR.message,
+        Code.CONTRIBUTION_TYPE_EXIST_ERROR.code,
+      );
+    }
+    return this.prisma.contributionType.create({
+      data: {
+        name,
+        color,
+        projectId,
       },
     });
   }
