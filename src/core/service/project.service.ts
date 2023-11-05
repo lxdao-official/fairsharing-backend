@@ -121,6 +121,15 @@ export class ProjectService {
     return this.getProject(projectId);
   }
 
+  async getContributionTypeList(projectId: string) {
+    return this.prisma.contributionType.findMany({
+      where: {
+        projectId,
+        deleted: false,
+      },
+    });
+  }
+
   async getProject(projectId: string, needThrow = false) {
     const project = await this.prisma.project.findFirst({
       where: {

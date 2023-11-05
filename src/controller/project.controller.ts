@@ -1,3 +1,11 @@
+import { CoreApiResponse } from '@core/api/coreApiResponse';
+import { ProjectService } from '@core/service/project.service';
+import {
+  CreateProjectBody,
+  MintRecordQuery,
+  ProjectListQuery,
+  UpdateProjectBody,
+} from '@core/type/doc/project';
 import {
   Body,
   Controller,
@@ -9,14 +17,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ProjectService } from '@core/service/project.service';
-import { CoreApiResponse } from '@core/api/coreApiResponse';
-import {
-  CreateProjectBody,
-  MintRecordQuery,
-  ProjectListQuery,
-  UpdateProjectBody,
-} from '@core/type/doc/project';
 
 @Controller('project')
 export class ProjectController {
@@ -41,6 +41,14 @@ export class ProjectController {
   async getProjectDetail(@Param('projectId') projectId: string) {
     const detail = await this.projectService.getProjectDetail(projectId);
     return CoreApiResponse.success(detail);
+  }
+
+  @Get(':projectId/contributionTypeList')
+  async getContributionTypeList(@Param('projectId') projectId: string) {
+    const typeList = await this.projectService.getContributionTypeList(
+      projectId,
+    );
+    return CoreApiResponse.success(typeList);
   }
 
   @Delete(':projectId/delete')
