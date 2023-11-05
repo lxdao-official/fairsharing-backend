@@ -78,7 +78,7 @@ model Contribution {
 }
 
 model ContributionType {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
