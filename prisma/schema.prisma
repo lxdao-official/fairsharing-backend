@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum VoteSystem {
+  EQUAL
+  WEIGHT
+}
+
+enum VoteApprove {
+  DEFAULT
+  RELATIVE2
+  ABSOLUTE1
+  ABSOLUTE2
+}
+
 model Project {
   id             String         @id
   name           String
@@ -22,8 +34,8 @@ model Project {
   createAt       DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   deleted        Boolean        @default(false)
-  voteSystem     Int
-  voteApprove    Int
+  voteSystem     VoteSystem
+  voteApprove    VoteApprove
   voteThreshold  Float
   contributions  Contribution[]
   contributors   Contributor[]

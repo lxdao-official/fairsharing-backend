@@ -6,6 +6,7 @@ import {
 } from '@core/type/doc/project';
 import { paginate } from '@core/utils/paginator';
 import { HttpException, Injectable } from '@nestjs/common';
+import { VoteSystem } from '@prisma/client';
 import { ContributorService } from '@service/contributor.service';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -65,7 +66,9 @@ export class ProjectService {
     } = body;
     this.contributorService.checkWalletUnique(contributors);
     this.contributorService.checkAdminPermission(contributors);
-    this.contributorService.checkWeightAmount(contributors);
+    if (voteSystem === VoteSystem.WEIGHT) {
+      this.contributorService.checkWeightAmount(contributors);
+    }
     const users = await Promise.all(
       contributors.map((item) =>
         this.prisma.user.findFirst({

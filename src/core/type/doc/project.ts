@@ -1,6 +1,7 @@
 import { Contributor } from '@core/type/contributor';
 import { PaginateQuery } from '@core/type/doc/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { VoteApprove, VoteSystem } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
@@ -61,16 +62,14 @@ export class CreateProjectBody {
   intro: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({ type: 'number' })
-  voteSystem: number;
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  voteSystem: VoteSystem;
 
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({ type: 'number' })
-  voteApprove: number;
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  voteApprove: VoteApprove;
 
   @IsNotEmpty()
   @IsNumber()
