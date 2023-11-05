@@ -22,6 +22,9 @@ model Project {
   createAt       DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   deleted        Boolean        @default(false)
+  voteSystem     Int
+  voteApprove    Int
+  voteThreshold  Float
   contributions  Contribution[]
   contributors   Contributor[]
   MintReocrd     MintReocrd[]
@@ -72,6 +75,7 @@ model Contributor {
   createAt     DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   deleted      Boolean        @default(false)
+  voteWeights  Float
   Contribution Contribution[]
   MintReocrd   MintReocrd[]
 }
