@@ -135,7 +135,16 @@ export class ContributionService {
   }
 
   async createContribution(body: CreateContributionBody) {
-    const { detail, projectId, proof, toIds, credit, operatorId } = body;
+    const {
+      detail,
+      projectId,
+      proof,
+      toIds,
+      credit,
+      operatorId,
+      type,
+      contributionDate,
+    } = body;
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
@@ -159,6 +168,8 @@ export class ContributionService {
         toIds,
         credit,
         projectId,
+        type,
+        contributionDate,
         ownerId: operatorId,
       },
     });
