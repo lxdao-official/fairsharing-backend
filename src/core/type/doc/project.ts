@@ -98,6 +98,22 @@ export class UpdateProjectBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   intro: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  voteSystem: VoteSystem;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  voteApprove: VoteApprove;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  voteThreshold: number;
 }
 
 export class ProjectListQuery extends PaginateQuery {

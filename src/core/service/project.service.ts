@@ -64,6 +64,7 @@ export class ProjectService {
       voteSystem,
       voteThreshold,
     } = body;
+    this.checkVoteThreshold(voteThreshold);
     this.contributorService.checkWalletUnique(contributors);
     this.contributorService.checkAdminPermission(contributors);
     if (voteSystem === VoteSystem.WEIGHT) {
@@ -147,8 +148,17 @@ export class ProjectService {
   }
 
   async editProject(projectId: string, body: UpdateProjectBody) {
-    const { name, votePeriod, logo, intro } = body;
+    const {
+      name,
+      votePeriod,
+      logo,
+      intro,
+      voteApprove,
+      voteSystem,
+      voteThreshold,
+    } = body;
     await this.getProject(projectId, true);
+    this.checkVoteThreshold(voteThreshold);
     return this.prisma.project.update({
       where: {
         id: projectId,
@@ -158,6 +168,9 @@ export class ProjectService {
         votePeriod,
         logo,
         intro,
+        voteApprove,
+        voteSystem,
+        voteThreshold,
       },
     });
   }
@@ -188,5 +201,14 @@ export class ProjectService {
         },
       },
     });
+  }
+
+  checkVoteThreshold(voteThreshold: number) {
+    if (voteThreshold > 1) {
+      throw new HttpException(
+        Code.VOTE_THRESHOLD_ERROR.message,
+        Code.VOTE_THRESHOLD_ERROR.code,
+      );
+    }
   }
 }

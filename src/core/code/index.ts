@@ -46,6 +46,11 @@ export class Code {
     message: 'Project must have one admin.',
   };
 
+  static VOTE_THRESHOLD_ERROR: CodeDescription = {
+    code: 10201,
+    message: 'Vote threshold must be less than 1.',
+  };
+
   // Contribution
   static CONTRIBUTION_STATUS_ERROR: CodeDescription = {
     code: 10300,
