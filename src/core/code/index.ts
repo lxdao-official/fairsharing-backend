@@ -35,6 +35,11 @@ export class Code {
     message: 'Contributor wallet must be unique.',
   };
 
+  static WEIGHT_AMOUNT_ERROR: CodeDescription = {
+    code: 10100,
+    message: 'Weights must add up to 100%.',
+  };
+
   // Project
   static ADMIN_PERMISSION_ERROR: CodeDescription = {
     code: 10200,

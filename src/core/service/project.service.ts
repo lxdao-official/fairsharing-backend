@@ -59,9 +59,13 @@ export class ProjectService {
       votePeriod,
       symbol,
       intro,
+      voteApprove,
+      voteSystem,
+      voteThreshold,
     } = body;
     this.contributorService.checkWalletUnique(contributors);
     this.contributorService.checkAdminPermission(contributors);
+    this.contributorService.checkWeightAmount(contributors);
     const users = await Promise.all(
       contributors.map((item) =>
         this.prisma.user.findFirst({
@@ -81,19 +85,24 @@ export class ProjectService {
         votePeriod,
         symbol,
         intro,
+        voteApprove,
+        voteThreshold,
+        voteSystem,
         contributors: {
           createMany: {
             data: [
               ...contributors.map((item) => {
+                const { wallet, permission, role, nickName, voteWeight } = item;
                 const userId = users.find(
                   (user) => user?.wallet === item.wallet,
                 )?.id;
                 return {
-                  wallet: item.wallet,
-                  permission: Number(item.permission),
-                  role: item.role,
-                  nickName: item.nickName,
+                  wallet,
+                  permission: Number(permission),
+                  role,
+                  nickName,
                   userId,
+                  voteWeight,
                 };
               }),
             ],
