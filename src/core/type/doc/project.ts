@@ -1,16 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  IsArray,
-  ArrayNotEmpty,
-  ValidateNested,
-  IsOptional,
-} from 'class-validator';
 import { Contributor } from '@core/type/contributor';
 import { PaginateQuery } from '@core/type/doc/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -59,6 +59,24 @@ export class CreateProjectBody {
   @IsString()
   @ApiProperty({ type: 'string', required: false })
   intro: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  voteSystem: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  voteApprove: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  voteThreshold: number;
 }
 
 export class UpdateProjectBody {
