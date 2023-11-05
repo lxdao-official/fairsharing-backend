@@ -9,5 +9,6 @@ export interface Contributor {
   wallet: string;
   permission: Permission;
   role: string;
+  voteWeight: number;
   id?: string;
 }
