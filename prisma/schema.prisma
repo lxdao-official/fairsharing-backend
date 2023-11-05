@@ -75,7 +75,7 @@ model Contributor {
   createAt     DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   deleted      Boolean        @default(false)
-  voteWeights  Float
+  voteWeight   Float
   Contribution Contribution[]
   MintReocrd   MintReocrd[]
 }
