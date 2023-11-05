@@ -82,6 +82,7 @@ model ContributionType {
   name      String
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
+  color     String
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
   deleted   Boolean  @default(false)
