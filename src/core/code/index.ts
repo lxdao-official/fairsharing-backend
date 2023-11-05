@@ -51,6 +51,11 @@ export class Code {
     message: 'Vote threshold must be less than 1.',
   };
 
+  static CONTRIBUTION_TYPE_EXIST_ERROR: CodeDescription = {
+    code: 10202,
+    message: 'Contribution type exist.',
+  };
+
   // Contribution
   static CONTRIBUTION_STATUS_ERROR: CodeDescription = {
     code: 10300,
