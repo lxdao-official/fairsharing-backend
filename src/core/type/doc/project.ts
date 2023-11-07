@@ -6,12 +6,25 @@ import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
+
+enum VoteSystemEnum {
+  EQUAL = 'EQUAL',
+  WEIGHT = 'WEIGHT',
+}
+
+enum VoteApproveEnum {
+  DEFAULT = 'DEFAULT',
+  RELATIVE2 = 'RELATIVE2',
+  ABSOLUTE1 = 'ABSOLUTE1',
+  ABSOLUTE2 = 'ABSOLUTE2',
+}
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -64,11 +77,13 @@ export class CreateProjectBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
+  @IsEnum(VoteSystemEnum)
   voteSystem: VoteSystem;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
+  @IsEnum(VoteApproveEnum)
   voteApprove: VoteApprove;
 
   @IsNotEmpty()
@@ -102,11 +117,13 @@ export class UpdateProjectBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
+  @IsEnum(VoteSystem)
   voteSystem: VoteSystem;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
+  @IsEnum(VoteApprove)
   voteApprove: VoteApprove;
 
   @IsNotEmpty()
