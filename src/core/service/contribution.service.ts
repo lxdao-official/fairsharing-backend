@@ -11,6 +11,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { EasService } from '@service/eas.service';
 import * as dayjs from 'dayjs';
+import { ethers } from 'ethers';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class ContributionService {
   }
 
   async updateContributionState(
-    contributionId: number,
+    contributionId: string,
     body: UpdateContributionStateBody,
   ) {
     const { type, uId, operatorId } = body;
@@ -161,6 +162,12 @@ export class ContributionService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
+    const id = ethers.keccak256(
+      ethers.AbiCoder.defaultAbiCoder().encode(
+        ['string', 'string'],
+        [detail, dayjs().toString()],
+      ),
+    );
     return this.prisma.contribution.create({
       data: {
         detail,
@@ -171,13 +178,14 @@ export class ContributionService {
         type,
         contributionDate,
         ownerId: operatorId,
+        id,
       },
     });
   }
 
   async prepareClaim(body: PrepareClaimBody) {
     const { chainId, contributionIds, toWallets, wallet } = body;
-    const cIds = contributionIds.split(',').map((item) => Number(item));
+    const cIds = contributionIds.split(',').map((item) => item);
     const contributions = await this.prisma.contribution.findMany({
       where: {
         id: {
@@ -230,7 +238,7 @@ export class ContributionService {
     return signs;
   }
 
-  async deleteContribution(id: number, body: DeleteContributionBody) {
+  async deleteContribution(id: string, body: DeleteContributionBody) {
     const { operatorId } = body;
     const contribution = await this.prisma.contribution.findFirst({
       where: {

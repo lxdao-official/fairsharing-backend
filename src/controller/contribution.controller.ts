@@ -13,7 +13,6 @@ import {
   Get,
   Inject,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -34,7 +33,7 @@ export class ContributionController {
 
   @Put(':contributionId/updateState')
   async updateContributionState(
-    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Param('contributionId') contributionId: string,
     @Body() body: UpdateContributionStateBody,
   ) {
     await this.contributionService.updateContributionState(
@@ -59,7 +58,7 @@ export class ContributionController {
 
   @Delete(':contributionId')
   async deleteContribution(
-    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Param('contributionId') contributionId: string,
     @Body() body: DeleteContributionBody,
   ) {
     await this.contributionService.deleteContribution(contributionId, body);

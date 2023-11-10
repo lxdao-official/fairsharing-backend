@@ -24,14 +24,14 @@ export class EasService {
   ) {}
 
   async getSignature(
-    contributionId: number,
+    contributionId: string,
     chainId: number,
     toWallet: string,
     wallet: string,
   ) {
     const hash = ethers.keccak256(
       ethers.AbiCoder.defaultAbiCoder().encode(
-        ['uint256', 'address', 'address', 'uint64'],
+        ['uint256', 'address', 'address', 'string'],
         [chainId, wallet, toWallet, contributionId],
       ),
     );
