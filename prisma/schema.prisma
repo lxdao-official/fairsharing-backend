@@ -59,7 +59,7 @@ enum Status {
 }
 
 model Contribution {
-  id               Int         @id @default(autoincrement())
+  id               String      @id
   detail           String
   proof            String
   credit           Float
