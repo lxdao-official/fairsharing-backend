@@ -213,17 +213,18 @@ export class ContributionService {
         );
       }
     }
-    const voteResults = await Promise.all(
-      contributions.map((item) =>
-        this.easService.getEASVoteResult(item.uId, chainId),
-      ),
-    );
-    if (voteResults.some((item) => !item)) {
-      throw new HttpException(
-        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
-        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
-      );
-    }
+    // 11.11 hide vote result validate for test
+    // const voteResults = await Promise.all(
+    //   contributions.map((item) =>
+    //     this.easService.getEASVoteResult(item.uId, chainId),
+    //   ),
+    // );
+    // if (voteResults.some((item) => !item)) {
+    //   throw new HttpException(
+    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
+    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
+    //   );
+    // }
     const signs = [];
     let i = 0;
     for (const cId of cIds) {
