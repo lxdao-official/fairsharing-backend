@@ -1,20 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
-import { ethers } from 'ethers';
-import { PrismaService } from 'nestjs-prisma';
-import {
-  EAS_CHAIN_CONFIGS,
-  EasSchemaMap,
-  MainEasSchemaMap,
-} from '../../config/eas';
 import {
   EasAttestation,
   EasAttestationData,
   EasAttestationDecodedData,
   EasSchemaVoteKey,
   IVoteValueEnum,
-} from '../type/eas';
+} from '@core/type/eas';
+import {
+  getVoteStrategyABI,
+  getVoteStrategyContract,
+} from '@core/utils/contract';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Contributor, Project } from '@prisma/client';
+import axios from 'axios';
+import { AlchemyProvider, ethers } from 'ethers';
+import { PrismaService } from 'nestjs-prisma';
+import {
+  EAS_CHAIN_CONFIGS,
+  EasSchemaMap,
+  MainEasSchemaMap,
+} from '../../config/eas';
 
 @Injectable()
 export class EasService {
@@ -80,7 +85,7 @@ export class EasService {
       data: JSON.parse(item.data as string) as EasAttestationData,
     }));
 
-    const userVoterMap: Record<string, number[]> = {};
+    const userVoterMap: Record<string, number> = {};
     easVoteList?.forEach((vote) => {
       const { signer } = vote.data as EasAttestationData;
       const decodedDataJson =
@@ -89,21 +94,51 @@ export class EasService {
         (item) => item.name === 'VoteChoice',
       );
       if (voteValueItem) {
-        const voteNumber = voteValueItem.value.value as IVoteValueEnum;
-        if (userVoterMap[signer]) {
-          userVoterMap[signer].push(voteNumber);
-        } else {
-          userVoterMap[signer] = [voteNumber];
-        }
+        userVoterMap[signer] = voteValueItem.value.value as IVoteValueEnum;
       }
     });
-    let For = 0;
-    let against = 0;
-    for (const [_, value] of Object.entries(userVoterMap)) {
-      const lastVote = value[value.length - 1];
-      lastVote === IVoteValueEnum.FOR ? For++ : against++;
-    }
-    return For / (For + against) > 0.5;
+    return userVoterMap;
+  }
+
+  async getVoteResult(
+    uId: string,
+    chainId: number,
+    projectDetail: Project,
+    contributorList: Contributor[],
+  ) {
+    const voteData = await this.getEASVoteResult(uId, chainId);
+    const voteStrategyAddress = getVoteStrategyContract(
+      projectDetail.voteApprove as any,
+    );
+    const ABI = getVoteStrategyABI(projectDetail.voteApprove as any);
+    const AlchemyApiKey =
+      this.configService.get('ALCHEMY_KEY') ||
+      'wE3mZ2OcBrmi5-FRBMQZDNHrQVuaGOKC';
+    const provider = new AlchemyProvider(chainId, AlchemyApiKey);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(voteStrategyAddress, ABI, signer);
+
+    const voters: string[] = contributorList.map((item) => item.wallet);
+    const voteValues: IVoteValueEnum[] = contributorList.map((contributor) => {
+      if (voteData?.[contributor.wallet]) {
+        return Number(voteData?.[contributor.wallet]);
+      } else {
+        return IVoteValueEnum.ABSTAIN;
+      }
+    });
+    const weights: number[] = contributorList.map(
+      (item) => item.voteWeight * 100,
+    );
+    const threshold = Number(projectDetail.voteThreshold) * 100;
+    const votingStrategyData = ethers.toUtf8Bytes('');
+    return contract.getResult(
+      voters,
+      voteValues,
+      weights,
+      threshold,
+      votingStrategyData,
+      votingStrategyData,
+    );
   }
 
   private getGraphEndpoint(chainId: number) {
