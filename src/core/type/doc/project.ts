@@ -14,12 +14,12 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-enum VoteSystemEnum {
+export enum VoteSystemEnum {
   EQUAL = 'EQUAL',
   WEIGHT = 'WEIGHT',
 }
 
-enum VoteApproveEnum {
+export enum VoteApproveEnum {
   DEFAULT = 'DEFAULT',
   RELATIVE2 = 'RELATIVE2',
   ABSOLUTE1 = 'ABSOLUTE1',
