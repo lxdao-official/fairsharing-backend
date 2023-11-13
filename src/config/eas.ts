@@ -60,9 +60,9 @@ export const EAS_CHAIN_CONFIGS: EASChainConfig[] = [
 
 export const EasSchemaMap = {
   contribution:
-    '0xa7dca651e011d44363742bddfde1f72c5cec536858589b89778efc5bcdff868b',
-  vote: '0x1654a49365e83e920d7444dc48423cf16be33f9f902dca8500d00766cb9b8fd2',
-  claim: '0x7cc6a5995560f61cf4f77c00facfc83f93ec3ca95aad9a57e80504efb92a438a',
+    '0x0228657dc20f814b0770867d1a85ac473a0dc393c52603ef318bdab79dd9ea63',
+  vote: '0xe045889447a1b5ec1e4771b23e89f38f1cf379ec2e708e1789dfbf4739cdf56f',
+  claim: '0x4670eabb8d0ed4d28ed4b411defaf202695497dd78f32627dd77d3a0c4c00024',
 };
 
 export const MainEasSchemaMap = {
