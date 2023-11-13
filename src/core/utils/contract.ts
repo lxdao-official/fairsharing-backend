@@ -1,14 +1,24 @@
-import vote_strategy_absolute_v1_abi from '@/src/abi/vote_strategy_absolute_v1_abi.json';
-import vote_strategy_absolute_v2_abi from '@/src/abi/vote_strategy_absolute_v2_abi.json';
-import vote_strategy_relative_v1_abi from '@/src/abi/vote_strategy_relative_v1_abi.json';
-import vote_strategy_relative_v2_abi from '@/src/abi/vote_strategy_relative_v2_abi.json';
 import { VoteApproveEnum, VoteSystemEnum } from '@core/type/doc/project';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const VoteStrategyABIMap = {
-  RelativeV1: vote_strategy_relative_v1_abi,
-  RelativeV2: vote_strategy_relative_v2_abi,
-  AbsoluteV1: vote_strategy_absolute_v1_abi,
-  AbsoluteV2: vote_strategy_absolute_v2_abi,
+  RelativeV1: fs.readFileSync(
+    path.resolve(__dirname, '../../abi/vote_strategy_relative_v1_abi.json'),
+    'utf-8',
+  ),
+  RelativeV2: fs.readFileSync(
+    path.resolve(__dirname, '../../abi/vote_strategy_relative_v2_abi.json'),
+    'utf-8',
+  ),
+  AbsoluteV1: fs.readFileSync(
+    path.resolve(__dirname, '../../abi/vote_strategy_absolute_v1_abi.json'),
+    'utf-8',
+  ),
+  AbsoluteV2: fs.readFileSync(
+    path.resolve(__dirname, '../../abi/vote_strategy_absolute_v2_abi.json'),
+    'utf-8',
+  ),
 };
 
 const VoteStrategyMap = {
