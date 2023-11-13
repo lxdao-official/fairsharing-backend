@@ -28,6 +28,11 @@ export class EasService {
     private configService: ConfigService,
   ) {}
 
+  getSigner() {
+    const key = this.configService.get('SIGN_PRIVATE_KEY');
+    return new ethers.Wallet(key);
+  }
+
   async getSignature(
     contributionId: string,
     chainId: number,
@@ -41,8 +46,7 @@ export class EasService {
       ),
     );
 
-    const key = this.configService.get('SIGN_PRIVATE_KEY');
-    const signerWallet = new ethers.Wallet(key);
+    const signerWallet = this.getSigner();
     return signerWallet.signMessage(ethers.getBytes(hash));
   }
 
@@ -115,7 +119,8 @@ export class EasService {
       this.configService.get('ALCHEMY_KEY') ||
       'E04mwXKYzTzNMgWcfivXOvo8qQfZDqy2';
     const provider = new AlchemyProvider(chainId, AlchemyApiKey);
-    const contract = new ethers.Contract(voteStrategyAddress, ABI, provider);
+    const signer = this.getSigner().connect(provider);
+    const contract = new ethers.Contract(voteStrategyAddress, ABI, signer);
 
     const voters: string[] = contributorList.map((item) => item.wallet);
     const voteValues: IVoteValueEnum[] = contributorList.map((contributor) => {
