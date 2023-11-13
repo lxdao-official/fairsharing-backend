@@ -113,10 +113,9 @@ export class EasService {
     const ABI = getVoteStrategyABI(projectDetail.voteApprove as any);
     const AlchemyApiKey =
       this.configService.get('ALCHEMY_KEY') ||
-      'wE3mZ2OcBrmi5-FRBMQZDNHrQVuaGOKC';
+      'E04mwXKYzTzNMgWcfivXOvo8qQfZDqy2';
     const provider = new AlchemyProvider(chainId, AlchemyApiKey);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(voteStrategyAddress, ABI, signer);
+    const contract = new ethers.Contract(voteStrategyAddress, ABI, provider);
 
     const voters: string[] = contributorList.map((item) => item.wallet);
     const voteValues: IVoteValueEnum[] = contributorList.map((contributor) => {
