@@ -51,22 +51,32 @@ export class CreateContributionBody extends AuthBody {
   @ApiProperty({ type: 'number' })
   credit: number;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsArray()
   @ApiProperty({ isArray: true })
   toIds: string[];
+
+  @IsNotEmpty()
+  @IsArray()
+  @ApiProperty({ isArray: true })
+  type: string[];
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  contributionDate: string;
 }
 
-export class PrepareClaimQuery {
+export class PrepareClaimBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
   wallet: string;
 
   @IsNotEmpty()
-  @IsString()
-  @ApiProperty({ type: 'string' })
-  toWallet: string;
+  @IsArray()
+  @ApiProperty({ isArray: true })
+  toWallets: string[];
 
   @IsNotEmpty()
   @IsNumber()

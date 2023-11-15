@@ -1,8 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
-import { UpdateUserBody } from '@core/type/doc/user';
 import { Code } from '@core/code';
+import { UpdateUserBody } from '@core/type/doc/user';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ContributorService } from '@service/contributor.service';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class UserService {

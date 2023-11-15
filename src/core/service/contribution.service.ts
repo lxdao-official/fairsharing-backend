@@ -3,7 +3,7 @@ import {
   ContributionListQuery,
   CreateContributionBody,
   DeleteContributionBody,
-  PrepareClaimQuery,
+  PrepareClaimBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { paginate } from '@core/utils/paginator';
@@ -11,6 +11,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { EasService } from '@service/eas.service';
 import * as dayjs from 'dayjs';
+import { ethers } from 'ethers';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class ContributionService {
   }
 
   async updateContributionState(
-    contributionId: number,
+    contributionId: string,
     body: UpdateContributionStateBody,
   ) {
     const { type, uId, operatorId } = body;
@@ -78,17 +79,18 @@ export class ContributionService {
           Code.CONTRIBUTION_STATUS_ERROR.code,
         );
       }
-      const { projectId, credit } = contribution;
+      const { projectId, credit, toIds } = contribution;
+      const contributorId = toIds[0];
       const record = await this.prisma.mintReocrd.findFirst({
         where: {
-          contributorId: operatorId,
+          contributorId,
         },
       });
       if (!record) {
         fns.push(
           this.prisma.mintReocrd.create({
             data: {
-              contributorId: operatorId,
+              contributorId,
               credit,
               projectId,
             },
@@ -134,7 +136,16 @@ export class ContributionService {
   }
 
   async createContribution(body: CreateContributionBody) {
-    const { detail, projectId, proof, toIds, credit, operatorId } = body;
+    const {
+      detail,
+      projectId,
+      proof,
+      toIds,
+      credit,
+      operatorId,
+      type,
+      contributionDate,
+    } = body;
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
@@ -151,6 +162,12 @@ export class ContributionService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
+    const id = ethers.keccak256(
+      ethers.AbiCoder.defaultAbiCoder().encode(
+        ['string', 'string'],
+        [detail, dayjs().toString()],
+      ),
+    );
     return this.prisma.contribution.create({
       data: {
         detail,
@@ -158,14 +175,17 @@ export class ContributionService {
         toIds,
         credit,
         projectId,
+        type,
+        contributionDate,
         ownerId: operatorId,
+        id,
       },
     });
   }
 
-  async prepareClaim(query: PrepareClaimQuery) {
-    const cIds = query.contributionIds.split(',').map((item) => Number(item));
-    const { chainId } = query;
+  async prepareClaim(body: PrepareClaimBody) {
+    const { chainId, contributionIds, toWallets, wallet } = body;
+    const cIds = contributionIds.split(',').map((item) => item);
     const contributions = await this.prisma.contribution.findMany({
       where: {
         id: {
@@ -173,7 +193,11 @@ export class ContributionService {
         },
       },
       include: {
-        project: true,
+        project: {
+          include: {
+            contributors: true,
+          },
+        },
       },
     });
     if (contributions.length !== cIds.length) {
@@ -193,26 +217,37 @@ export class ContributionService {
         );
       }
     }
-    // const voteResults = await Promise.all(
-    //   contributions.map((item) =>
-    //     this.easService.getEASVoteResult(item.uId, chainId),
-    //   ),
-    // );
-    // if (voteResults.some((item) => !item)) {
-    //   throw new HttpException(
-    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
-    //     Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
-    //   );
-    // }
+    const voteResults = await Promise.all(
+      contributions.map((item) =>
+        this.easService.getVoteResult(
+          item.uId,
+          chainId,
+          item.project,
+          item.project.contributors,
+        ),
+      ),
+    );
+    if (voteResults.some((item) => !item)) {
+      throw new HttpException(
+        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.message,
+        Code.CONTRIBUTION_CLAIM_VOTE_NUMBER_ERROR.code,
+      );
+    }
     const signs = [];
-    for (const contribution of contributions) {
-      const sign = await this.easService.getSignature(contribution.id, query);
+    let i = 0;
+    for (const cId of cIds) {
+      const sign = await this.easService.getSignature(
+        cId,
+        chainId,
+        toWallets[i++],
+        wallet,
+      );
       signs.push(sign);
     }
     return signs;
   }
 
-  async deleteContribution(id: number, body: DeleteContributionBody) {
+  async deleteContribution(id: string, body: DeleteContributionBody) {
     const { operatorId } = body;
     const contribution = await this.prisma.contribution.findFirst({
       where: {

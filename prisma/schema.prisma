@@ -10,21 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum VoteSystem {
+  EQUAL
+  WEIGHT
+}
+
+enum VoteApprove {
+  DEFAULT
+  RELATIVE2
+  ABSOLUTE1
+  ABSOLUTE2
+}
+
 model Project {
-  id             String         @id
-  name           String
-  intro          String?
-  logo           String?
-  votePeriod     String
-  network        Int
-  symbol         String
-  pointConsensus String?
-  createAt       DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  deleted        Boolean        @default(false)
-  contributions  Contribution[]
-  contributors   Contributor[]
-  MintReocrd     MintReocrd[]
+  id               String             @id
+  name             String
+  intro            String?
+  logo             String?
+  votePeriod       String
+  network          Int
+  symbol           String
+  pointConsensus   String?
+  createAt         DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  deleted          Boolean            @default(false)
+  voteSystem       VoteSystem         @default(EQUAL)
+  voteApprove      VoteApprove        @default(DEFAULT)
+  voteThreshold    Float              @default(0.5)
+  contributions    Contribution[]
+  contributors     Contributor[]
+  MintReocrd       MintReocrd[]
+  ContributionType ContributionType[]
 }
 
 model User {
@@ -43,20 +59,33 @@ enum Status {
 }
 
 model Contribution {
-  id        Int         @id @default(autoincrement())
-  detail    String
-  proof     String
-  credit    Float
-  toIds     String[]
-  status    Status      @default(UNREADY)
-  uId       String?     @unique
-  owner     Contributor @relation(fields: [ownerId], references: [id])
-  ownerId   String
-  project   Project     @relation(fields: [projectId], references: [id])
+  id               String      @id
+  detail           String
+  proof            String
+  credit           Float
+  toIds            String[]
+  status           Status      @default(UNREADY)
+  uId              String?     @unique
+  owner            Contributor @relation(fields: [ownerId], references: [id])
+  ownerId          String
+  project          Project     @relation(fields: [projectId], references: [id])
+  projectId        String
+  type             String[]
+  contributionDate String?
+  createAt         DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  deleted          Boolean     @default(false)
+}
+
+model ContributionType {
+  id        String   @id @default(uuid())
+  name      String
+  project   Project  @relation(fields: [projectId], references: [id])
   projectId String
-  createAt  DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  deleted   Boolean     @default(false)
+  color     String
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted   Boolean  @default(false)
 }
 
 model Contributor {
@@ -72,6 +101,7 @@ model Contributor {
   createAt     DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   deleted      Boolean        @default(false)
+  voteWeight   Float          @default(0.5)
   Contribution Contribution[]
   MintReocrd   MintReocrd[]
 }

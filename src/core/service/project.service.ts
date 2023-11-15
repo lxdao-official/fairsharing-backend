@@ -1,11 +1,14 @@
 import { Code } from '@core/code';
 import {
+  CreateContributionTypeBody,
   CreateProjectBody,
   MintRecordQuery,
+  UpdateContributionTypeBody,
   UpdateProjectBody,
 } from '@core/type/doc/project';
 import { paginate } from '@core/utils/paginator';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { VoteSystem } from '@prisma/client';
 import { ContributorService } from '@service/contributor.service';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -13,6 +16,7 @@ import { PrismaService } from 'nestjs-prisma';
 export class ProjectService {
   constructor(
     private prisma: PrismaService,
+    @Inject(forwardRef(() => ContributorService))
     private contributorService: ContributorService,
   ) {}
   async getProjectList(pageSize: number, currentPage: number) {
@@ -59,9 +63,16 @@ export class ProjectService {
       votePeriod,
       symbol,
       intro,
+      voteApprove,
+      voteSystem,
+      voteThreshold,
     } = body;
+    this.checkVoteThreshold(voteThreshold);
     this.contributorService.checkWalletUnique(contributors);
     this.contributorService.checkAdminPermission(contributors);
+    if (voteSystem === VoteSystem.WEIGHT) {
+      this.contributorService.checkWeightAmount(contributors);
+    }
     const users = await Promise.all(
       contributors.map((item) =>
         this.prisma.user.findFirst({
@@ -81,19 +92,24 @@ export class ProjectService {
         votePeriod,
         symbol,
         intro,
+        voteApprove,
+        voteThreshold,
+        voteSystem,
         contributors: {
           createMany: {
             data: [
               ...contributors.map((item) => {
+                const { wallet, permission, role, nickName, voteWeight } = item;
                 const userId = users.find(
                   (user) => user?.wallet === item.wallet,
                 )?.id;
                 return {
-                  wallet: item.wallet,
-                  permission: Number(item.permission),
-                  role: item.role,
-                  nickName: item.nickName,
+                  wallet,
+                  permission: Number(permission),
+                  role,
+                  nickName,
                   userId,
+                  voteWeight,
                 };
               }),
             ],
@@ -105,6 +121,15 @@ export class ProjectService {
 
   async getProjectDetail(projectId: string) {
     return this.getProject(projectId);
+  }
+
+  async getContributionTypeList(projectId: string) {
+    return this.prisma.contributionType.findMany({
+      where: {
+        projectId,
+        deleted: false,
+      },
+    });
   }
 
   async getProject(projectId: string, needThrow = false) {
@@ -135,8 +160,17 @@ export class ProjectService {
   }
 
   async editProject(projectId: string, body: UpdateProjectBody) {
-    const { name, votePeriod, logo, intro } = body;
+    const {
+      name,
+      votePeriod,
+      logo,
+      intro,
+      voteApprove,
+      voteSystem,
+      voteThreshold,
+    } = body;
     await this.getProject(projectId, true);
+    this.checkVoteThreshold(voteThreshold);
     return this.prisma.project.update({
       where: {
         id: projectId,
@@ -146,6 +180,9 @@ export class ProjectService {
         votePeriod,
         logo,
         intro,
+        voteApprove,
+        voteSystem,
+        voteThreshold,
       },
     });
   }
@@ -176,5 +213,73 @@ export class ProjectService {
         },
       },
     });
+  }
+
+  async createContributionType(
+    projectId: string,
+    body: CreateContributionTypeBody,
+  ) {
+    const { name, color } = body;
+    await this.getProject(projectId, true);
+    const typeList = await this.getContributionTypeList(projectId);
+    const index = typeList.findIndex((item) => item.name === name);
+    if (index > -1) {
+      throw new HttpException(
+        Code.CONTRIBUTION_TYPE_EXIST_ERROR.message,
+        Code.CONTRIBUTION_TYPE_EXIST_ERROR.code,
+      );
+    }
+    return this.prisma.contributionType.create({
+      data: {
+        name,
+        color,
+        projectId,
+      },
+    });
+  }
+
+  async editContributionType(body: UpdateContributionTypeBody) {
+    const { id, name, color } = body;
+    const type = await this.prisma.contributionType.findFirst({
+      where: {
+        id,
+        deleted: false,
+      },
+    });
+    if (!type) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    return this.prisma.contributionType.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        color,
+      },
+    });
+  }
+
+  async deleteContributionType(id: string) {
+    return this.prisma.contributionType.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+  }
+
+  checkVoteThreshold(voteThreshold: number) {
+    if (voteThreshold > 1) {
+      throw new HttpException(
+        Code.VOTE_THRESHOLD_ERROR.message,
+        Code.VOTE_THRESHOLD_ERROR.code,
+      );
+    }
   }
 }

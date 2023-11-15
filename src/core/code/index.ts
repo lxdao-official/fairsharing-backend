@@ -35,10 +35,25 @@ export class Code {
     message: 'Contributor wallet must be unique.',
   };
 
+  static WEIGHT_AMOUNT_ERROR: CodeDescription = {
+    code: 10100,
+    message: 'Weights must add up to 100%.',
+  };
+
   // Project
   static ADMIN_PERMISSION_ERROR: CodeDescription = {
     code: 10200,
     message: 'Project must have one admin.',
+  };
+
+  static VOTE_THRESHOLD_ERROR: CodeDescription = {
+    code: 10201,
+    message: 'Vote threshold must be less than 1.',
+  };
+
+  static CONTRIBUTION_TYPE_EXIST_ERROR: CodeDescription = {
+    code: 10202,
+    message: 'Contribution type exist.',
   };
 
   // Contribution

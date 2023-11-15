@@ -3,7 +3,7 @@ import {
   ContributionListQuery,
   CreateContributionBody,
   DeleteContributionBody,
-  PrepareClaimQuery,
+  PrepareClaimBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import {
@@ -13,7 +13,6 @@ import {
   Get,
   Inject,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -34,7 +33,7 @@ export class ContributionController {
 
   @Put(':contributionId/updateState')
   async updateContributionState(
-    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Param('contributionId') contributionId: string,
     @Body() body: UpdateContributionStateBody,
   ) {
     await this.contributionService.updateContributionState(
@@ -43,8 +42,8 @@ export class ContributionController {
     );
     return CoreApiResponse.success();
   }
-  @Get('prepareClaim')
-  async prepareClaim(@Query() query: PrepareClaimQuery) {
+  @Post('prepareClaim')
+  async prepareClaim(@Body() query: PrepareClaimBody) {
     const sign = await this.contributionService.prepareClaim(query);
     return CoreApiResponse.success(sign);
   }
@@ -59,7 +58,7 @@ export class ContributionController {
 
   @Delete(':contributionId')
   async deleteContribution(
-    @Param('contributionId', ParseIntPipe) contributionId: number,
+    @Param('contributionId') contributionId: string,
     @Body() body: DeleteContributionBody,
   ) {
     await this.contributionService.deleteContribution(contributionId, body);

@@ -5,12 +5,18 @@ import {
   DeleteContributorsBody,
   UpdateContributorsBody,
 } from '@core/type/doc/contributor';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { VoteSystem } from '@prisma/client';
+import { ProjectService } from '@service/project.service';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class ContributorService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => ProjectService))
+    private projectService: ProjectService,
+  ) {}
 
   async getContributorList(projectId: string) {
     return this.prisma.contributor.findMany({
@@ -42,6 +48,16 @@ export class ContributorService {
 
   async editContributor(body: UpdateContributorsBody) {
     const { contributors, projectId } = body;
+    const project = await this.projectService.getProjectDetail(projectId);
+    if (!project) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    if (project.voteSystem === VoteSystem.WEIGHT) {
+      this.checkWeightAmount(contributors);
+    }
     this.checkWalletUnique(contributors);
     this.checkAdminPermission(contributors);
     const currentContributors = await this.getContributorList(projectId);
@@ -60,6 +76,7 @@ export class ContributorService {
               permission: item.permission,
               nickName: item.nickName,
               role: item.role,
+              voteWeight: item.voteWeight,
             },
           });
         } else {
@@ -163,6 +180,19 @@ export class ContributorService {
       throw new HttpException(
         Code.ADMIN_PERMISSION_ERROR.message,
         Code.ADMIN_PERMISSION_ERROR.code,
+      );
+    }
+  }
+
+  checkWeightAmount(contributors: Contributor[]) {
+    const sum = contributors.reduce(
+      (prev, cur) => prev + Number(cur.voteWeight),
+      0,
+    );
+    if (sum !== 1) {
+      throw new HttpException(
+        Code.WEIGHT_AMOUNT_ERROR.message,
+        Code.WEIGHT_AMOUNT_ERROR.code,
       );
     }
   }

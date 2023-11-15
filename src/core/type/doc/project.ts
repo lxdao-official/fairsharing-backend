@@ -1,16 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  IsArray,
-  ArrayNotEmpty,
-  ValidateNested,
-  IsOptional,
-} from 'class-validator';
 import { Contributor } from '@core/type/contributor';
 import { PaginateQuery } from '@core/type/doc/common';
+import { ApiProperty } from '@nestjs/swagger';
+import { VoteApprove, VoteSystem } from '@prisma/client';
 import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+export enum VoteSystemEnum {
+  EQUAL = 'EQUAL',
+  WEIGHT = 'WEIGHT',
+}
+
+export enum VoteApproveEnum {
+  DEFAULT = 'DEFAULT',
+  RELATIVE2 = 'RELATIVE2',
+  ABSOLUTE1 = 'ABSOLUTE1',
+  ABSOLUTE2 = 'ABSOLUTE2',
+}
 
 export class CreateProjectBody {
   @IsNotEmpty()
@@ -59,6 +73,24 @@ export class CreateProjectBody {
   @IsString()
   @ApiProperty({ type: 'string', required: false })
   intro: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  @IsEnum(VoteSystemEnum)
+  voteSystem: VoteSystem;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  @IsEnum(VoteApproveEnum)
+  voteApprove: VoteApprove;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  voteThreshold: number;
 }
 
 export class UpdateProjectBody {
@@ -81,6 +113,24 @@ export class UpdateProjectBody {
   @IsString()
   @ApiProperty({ type: 'string' })
   intro: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  @IsEnum(VoteSystem)
+  voteSystem: VoteSystem;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  @IsEnum(VoteApprove)
+  voteApprove: VoteApprove;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  voteThreshold: number;
 }
 
 export class ProjectListQuery extends PaginateQuery {
@@ -95,4 +145,30 @@ export class MintRecordQuery {
   @IsString()
   @ApiProperty({ type: 'string' })
   wallet?: string;
+}
+
+export class CreateContributionTypeBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  color: string;
+}
+
+export class UpdateContributionTypeBody extends CreateContributionTypeBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  id: string;
+}
+
+export class DeleteContributionTypeBody {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  id: string;
 }

@@ -60,14 +60,14 @@ export const EAS_CHAIN_CONFIGS: EASChainConfig[] = [
 
 export const EasSchemaMap = {
   contribution:
-    '0xa7dca651e011d44363742bddfde1f72c5cec536858589b89778efc5bcdff868b',
-  vote: '0x1654a49365e83e920d7444dc48423cf16be33f9f902dca8500d00766cb9b8fd2',
-  claim: '0x7cc6a5995560f61cf4f77c00facfc83f93ec3ca95aad9a57e80504efb92a438a',
+    '0x0228657dc20f814b0770867d1a85ac473a0dc393c52603ef318bdab79dd9ea63',
+  vote: '0xe045889447a1b5ec1e4771b23e89f38f1cf379ec2e708e1789dfbf4739cdf56f',
+  claim: '0x4670eabb8d0ed4d28ed4b411defaf202695497dd78f32627dd77d3a0c4c00024',
 };
 
 export const MainEasSchemaMap = {
   contribution:
-    '0x94cef30720b63a5aa25982d458049c0e731d4d976626acfb74c2865c331bd856',
-  vote: '0x4178647bccbc81a81357a9d969526a23e269123ff71f69fc8708c9d099d0e14a',
-  claim: '0x60cf8f1d82f6322b466cd0141bd3a68f7732373e805042e0000a259182a67612',
+    '0xc012dddde021c7258ff4671b1be08fe6b3b51d98bd0a89b43d020fafde24b476',
+  vote: '0x2a3fe60324ed2be48cf5790d6edc7bdbc28042f7abebb81329aec640f3439a52',
+  claim: '0x5bf21260c46b75fe29ccc66463c2bf4cf71264da7610f52cafefa5604d30fe61',
 };
