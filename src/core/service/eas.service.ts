@@ -115,9 +115,11 @@ export class EasService {
       projectDetail.voteApprove as any,
     );
     const ABI = getVoteStrategyABI(projectDetail.voteApprove as any);
-    const AlchemyApiKey =
-      this.configService.get('ALCHEMY_KEY') ||
-      'E04mwXKYzTzNMgWcfivXOvo8qQfZDqy2';
+    const testKey =
+      chainId === 10
+        ? 'gvJlCg5IaENekNwdoLn4Ah21yQOVvDaI'
+        : 'E04mwXKYzTzNMgWcfivXOvo8qQfZDqy2';
+    const AlchemyApiKey = this.configService.get('ALCHEMY_KEY') || testKey;
     const provider = new AlchemyProvider(chainId, AlchemyApiKey);
     const signer = this.getSigner().connect(provider);
     const contract = new ethers.Contract(voteStrategyAddress, ABI, signer);

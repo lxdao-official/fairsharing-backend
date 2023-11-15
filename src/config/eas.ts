@@ -67,7 +67,7 @@ export const EasSchemaMap = {
 
 export const MainEasSchemaMap = {
   contribution:
-    '0x94cef30720b63a5aa25982d458049c0e731d4d976626acfb74c2865c331bd856',
-  vote: '0x4178647bccbc81a81357a9d969526a23e269123ff71f69fc8708c9d099d0e14a',
-  claim: '0x60cf8f1d82f6322b466cd0141bd3a68f7732373e805042e0000a259182a67612',
+    '0xc012dddde021c7258ff4671b1be08fe6b3b51d98bd0a89b43d020fafde24b476',
+  vote: '0x2a3fe60324ed2be48cf5790d6edc7bdbc28042f7abebb81329aec640f3439a52',
+  claim: '0x5bf21260c46b75fe29ccc66463c2bf4cf71264da7610f52cafefa5604d30fe61',
 };
