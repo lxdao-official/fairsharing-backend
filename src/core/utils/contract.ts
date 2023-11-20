@@ -22,10 +22,18 @@ const VoteStrategyABIMap = {
 };
 
 const VoteStrategyMap = {
-  RelativeV1: '0xCdff95c4a99c1A645D6Be65c01be027cFE8cDC26',
-  RelativeV2: '0xD52A7eF9E7736506988c3B9b1a7Ffde451a236f7',
-  AbsoluteV1: '0xE0289920f9aB0d1303e6c53CE3A124509fbe55e1',
-  AbsoluteV2: '0xF919c9C0345f381de69EAA89ED20791Aca00CFcE',
+  420: {
+    RelativeV1: '0xCdff95c4a99c1A645D6Be65c01be027cFE8cDC26',
+    RelativeV2: '0xD52A7eF9E7736506988c3B9b1a7Ffde451a236f7',
+    AbsoluteV1: '0xE0289920f9aB0d1303e6c53CE3A124509fbe55e1',
+    AbsoluteV2: '0xF919c9C0345f381de69EAA89ED20791Aca00CFcE',
+  },
+  10: {
+    RelativeV1: '0x6fCa841788F8EAd49b2a94516F275FaA5Ae08d16',
+    RelativeV2: '0xBD13f4962C1a379DA6476Bd8d0d494c04c2E88C8',
+    AbsoluteV1: '0xE0289920f9aB0d1303e6c53CE3A124509fbe55e1',
+    AbsoluteV2: '0xF919c9C0345f381de69EAA89ED20791Aca00CFcE',
+  },
 };
 
 export function getVoteStrategyABI(voteApproveType: VoteApproveEnum) {
@@ -44,8 +52,10 @@ export function getVoteStrategyABI(voteApproveType: VoteApproveEnum) {
 
 export function getVoteStrategyContract(
   voteApproveType: VoteApproveEnum,
+  chainId: number,
 ): string {
-  const { RelativeV1, RelativeV2, AbsoluteV2, AbsoluteV1 } = VoteStrategyMap;
+  const { RelativeV1, RelativeV2, AbsoluteV2, AbsoluteV1 } =
+    VoteStrategyMap[chainId];
   switch (voteApproveType) {
     case VoteApproveEnum.ABSOLUTE1:
       return AbsoluteV1;
