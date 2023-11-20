@@ -20,6 +20,7 @@ import {
   EasSchemaMap,
   MainEasSchemaMap,
 } from '../../config/eas';
+import { VoteSystemEnum } from "@core/type/doc/project";
 
 @Injectable()
 export class EasService {
@@ -133,9 +134,11 @@ export class EasService {
         return IVoteValueEnum.ABSTAIN;
       }
     });
-    const weights: number[] = contributorList.map(
-      (item) => item.voteWeight * 100,
-    );
+    const weights: number[] = contributorList.map((item) => {
+      return projectDetail.voteSystem === VoteSystemEnum.EQUAL
+        ? 1
+        : item.voteWeight * 100;
+    });
     const threshold = Number(projectDetail.voteThreshold) * 100;
     const votingStrategyData = ethers.toUtf8Bytes('');
     return contract.getResult(
