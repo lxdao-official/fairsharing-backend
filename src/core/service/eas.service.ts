@@ -114,6 +114,7 @@ export class EasService {
     const voteData = await this.getEASVoteResult(uId, chainId);
     const voteStrategyAddress = getVoteStrategyContract(
       projectDetail.voteApprove as any,
+      chainId,
     );
     const ABI = getVoteStrategyABI(projectDetail.voteApprove as any);
     const testKey =
