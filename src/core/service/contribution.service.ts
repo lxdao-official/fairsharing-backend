@@ -19,15 +19,31 @@ export class ContributionService {
   constructor(private prisma: PrismaService, private easService: EasService) {}
 
   async getContributionList(query: ContributionListQuery) {
-    const { projectId, currentPage, pageSize, ownerId = '' } = query;
+    const { projectId, currentPage, pageSize, wallet = '' } = query;
+    const where = {
+      deleted: false,
+      projectId,
+      ownerId: '',
+    };
+    if (wallet) {
+      const user = await this.prisma.contributor.findFirst({
+        where: {
+          projectId,
+          wallet,
+        },
+      });
+      if (!user) {
+        throw new HttpException(
+          Code.NOT_FOUND_ERROR.message,
+          Code.NOT_FOUND_ERROR.code,
+        );
+      }
+      where.ownerId = user.id;
+    }
     return paginate(
       this.prisma.contribution,
       {
-        where: {
-          deleted: false,
-          projectId,
-          ownerId,
-        },
+        where,
       },
       {
         pageSize,
