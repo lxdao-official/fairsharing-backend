@@ -19,13 +19,14 @@ export class ContributionService {
   constructor(private prisma: PrismaService, private easService: EasService) {}
 
   async getContributionList(query: ContributionListQuery) {
-    const { projectId, currentPage, pageSize } = query;
+    const { projectId, currentPage, pageSize, ownerId = '' } = query;
     return paginate(
       this.prisma.contribution,
       {
         where: {
           deleted: false,
           projectId,
+          ownerId,
         },
       },
       {
