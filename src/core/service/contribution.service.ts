@@ -23,7 +23,6 @@ export class ContributionService {
     const where = {
       deleted: false,
       projectId,
-      ownerId: undefined,
     };
     if (wallet) {
       const user = await this.prisma.contributor.findFirst({
@@ -38,6 +37,7 @@ export class ContributionService {
           Code.NOT_FOUND_ERROR.code,
         );
       }
+      // @ts-ignore
       where.ownerId = user.id;
     }
     return paginate(
