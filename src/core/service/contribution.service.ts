@@ -23,7 +23,7 @@ export class ContributionService {
     const where = {
       deleted: false,
       projectId,
-      ownerId: '',
+      ownerId: undefined,
     };
     if (wallet) {
       const user = await this.prisma.contributor.findFirst({
