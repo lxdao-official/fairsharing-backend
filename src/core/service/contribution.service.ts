@@ -38,7 +38,7 @@ export class ContributionService {
         );
       }
       // @ts-ignore
-      where.ownerId = user.id;
+      where.toIds = { in: [user.id] };
     }
     return paginate(
       this.prisma.contribution,
