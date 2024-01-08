@@ -86,6 +86,7 @@ export class ContributionService {
     const statusMap = {
       claim: Status.CLAIM,
       ready: Status.READY,
+      revoke: Status.READY,
     };
     const data = { status: statusMap[type] };
     const fns = [];

@@ -26,7 +26,7 @@ export class UpdateContributionStateBody extends AuthBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  type: 'claim' | 'ready';
+  type: 'claim' | 'ready' | 'revoke';
 
   @IsOptional()
   @IsString()
