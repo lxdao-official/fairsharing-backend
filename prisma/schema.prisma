@@ -27,6 +27,7 @@ model Project {
   name             String
   intro            String?
   logo             String?
+  rule             String?
   votePeriod       String
   network          Int
   symbol           String
