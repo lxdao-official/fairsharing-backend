@@ -168,6 +168,7 @@ export class ProjectService {
       voteApprove,
       voteSystem,
       voteThreshold,
+      rule,
     } = body;
     await this.getProject(projectId, true);
     this.checkVoteThreshold(voteThreshold);
@@ -183,6 +184,7 @@ export class ProjectService {
         voteApprove,
         voteSystem,
         voteThreshold,
+        rule,
       },
     });
   }
