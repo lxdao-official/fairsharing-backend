@@ -1,4 +1,5 @@
 import { Contributor } from '@core/type/contributor';
+import { AuthBody } from '@core/type/doc/auth';
 import { PaginateQuery } from '@core/type/doc/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { VoteApprove, VoteSystem } from '@prisma/client';
@@ -93,7 +94,7 @@ export class CreateProjectBody {
   voteThreshold: number;
 }
 
-export class UpdateProjectBody {
+export class UpdateProjectBody extends AuthBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
