@@ -15,13 +15,18 @@ export class ContributionListQuery extends PaginateQuery {
   @IsString()
   @ApiProperty({ type: 'string' })
   projectId: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  wallet: string;
 }
 
 export class UpdateContributionStateBody extends AuthBody {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ type: 'string' })
-  type: 'claim' | 'ready';
+  type: 'claim' | 'ready' | 'revoke';
 
   @IsOptional()
   @IsString()

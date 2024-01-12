@@ -1,4 +1,5 @@
 import { Code } from '@core/code';
+import { Permission } from '@core/type/contributor';
 import {
   CreateContributionTypeBody,
   CreateProjectBody,
@@ -168,8 +169,18 @@ export class ProjectService {
       voteApprove,
       voteSystem,
       voteThreshold,
+      rule,
+      operatorId,
     } = body;
     await this.getProject(projectId, true);
+    const user = await this.prisma.contributor.findFirst({
+      where: {
+        id: operatorId,
+      },
+    });
+    if (user?.permission === Permission.Contributor) {
+      throw new HttpException(Code.NO_AUTH.message, Code.NO_AUTH.code);
+    }
     this.checkVoteThreshold(voteThreshold);
     return this.prisma.project.update({
       where: {
@@ -183,6 +194,7 @@ export class ProjectService {
         voteApprove,
         voteSystem,
         voteThreshold,
+        rule,
       },
     });
   }
