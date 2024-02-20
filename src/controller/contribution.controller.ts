@@ -3,6 +3,7 @@ import {
   ContributionListQuery,
   CreateContributionBody,
   DeleteContributionBody,
+  GetAllocationDetailsQuery,
   PrepareClaimBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
@@ -63,5 +64,11 @@ export class ContributionController {
   ) {
     await this.contributionService.deleteContribution(contributionId, body);
     return CoreApiResponse.success();
+  }
+
+  @Get('allocationDetails')
+  async getAllocationDetails(@Query() query: GetAllocationDetailsQuery) {
+    const data = await this.contributionService.getAllocationDetails(query);
+    return CoreApiResponse.success(data);
   }
 }

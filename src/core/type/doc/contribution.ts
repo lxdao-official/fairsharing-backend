@@ -102,3 +102,22 @@ export class PrepareClaimBody {
 }
 
 export class DeleteContributionBody extends AuthBody {}
+
+export class GetAllocationDetailsQuery {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  projectId: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  startDate: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  endDate: number;
+}
