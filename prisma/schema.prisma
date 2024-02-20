@@ -42,6 +42,7 @@ model Project {
   contributors     Contributor[]
   MintReocrd       MintReocrd[]
   ContributionType ContributionType[]
+  Payment          Payment[]
 }
 
 model User {
@@ -129,6 +130,8 @@ model Payment {
   chainId        String
   allocate       String
   amount         String
+  project        Project  @relation(fields: [projectId], references: [id])
+  projectId      String
   createAt       DateTime @default(now())
   updatedAt      DateTime @updatedAt
   deleted        Boolean  @default(false)
