@@ -73,6 +73,8 @@ model Contribution {
   projectId        String
   type             String[]
   contributionDate String?
+  startDate        DateTime?
+  endDate          DateTime?
   createAt         DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   deleted          Boolean     @default(false)
