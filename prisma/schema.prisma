@@ -129,6 +129,7 @@ model Payment {
   category       String
   chainId        String
   allocate       String
+  symbol         String
   amount         String
   project        Project  @relation(fields: [projectId], references: [id])
   projectId      String
