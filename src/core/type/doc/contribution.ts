@@ -67,9 +67,16 @@ export class CreateContributionBody extends AuthBody {
   type: string[];
 
   @IsNotEmpty()
-  @IsString()
-  @ApiProperty({ type: 'string' })
-  contributionDate: string;
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  startDate: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  endDate: number;
 }
 
 export class PrepareClaimBody {

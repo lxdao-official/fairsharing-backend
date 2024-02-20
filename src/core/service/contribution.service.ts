@@ -162,7 +162,8 @@ export class ContributionService {
       credit,
       operatorId,
       type,
-      contributionDate,
+      startDate,
+      endDate,
     } = body;
     const project = await this.prisma.project.findFirst({
       where: {
@@ -194,7 +195,8 @@ export class ContributionService {
         credit,
         projectId,
         type,
-        contributionDate,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
         ownerId: operatorId,
         id,
       },
