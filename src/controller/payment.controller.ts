@@ -1,6 +1,6 @@
 import { CoreApiResponse } from '@core/api/coreApiResponse';
-import { PaymentListQuery } from '@core/type/doc/payment';
-import { Controller, Get, Inject, Query } from '@nestjs/common';
+import { CreatePaymentBody, PaymentListQuery } from '@core/type/doc/payment';
+import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { PaymentService } from '@service/payment.service';
 import { UserService } from '@service/user.service';
 
@@ -15,5 +15,11 @@ export class UserController {
   async getPaymentList(@Query() data: PaymentListQuery) {
     const user = await this.paymentService.getPaymentList(data);
     return CoreApiResponse.success(user);
+  }
+
+  @Post('create')
+  async createPayment(@Body() body: CreatePaymentBody) {
+    const data = await this.paymentService.createPayment(body);
+    return CoreApiResponse.success(data);
   }
 }
