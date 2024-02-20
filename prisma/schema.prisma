@@ -120,3 +120,16 @@ model MintReocrd {
   updatedAt     DateTime     @updatedAt
   deleted       Boolean      @default(false)
 }
+
+model Payment {
+  id             String   @id @default(uuid())
+  purpose        String
+  counterparties String[]
+  category       String
+  chainId        String
+  allocate       String
+  amount         String
+  createAt       DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deleted        Boolean  @default(false)
+}
