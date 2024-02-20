@@ -51,6 +51,7 @@ export class PaymentService {
     return this.prisma.payment.create({
       data: {
         ...data,
+        creator: wallet,
         projectId,
       },
     });
