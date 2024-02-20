@@ -3,6 +3,7 @@ import LogsMiddleware from '@/src/middleware/logs';
 import { ContributionModule } from '@/src/module/contribution.module';
 import { ContributorModule } from '@/src/module/contributor.module';
 import { EasModule } from '@/src/module/eas.module';
+import { PaymentModule } from '@/src/module/payment.module';
 import { UserModule } from '@/src/module/user.module';
 import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -31,6 +32,7 @@ import { ProjectModule } from './module/project.module';
     UserModule,
     ContributionModule,
     EasModule,
+    PaymentModule,
   ],
   providers: [
     {
