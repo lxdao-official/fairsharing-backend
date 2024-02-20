@@ -134,6 +134,7 @@ model Payment {
   project        Project  @relation(fields: [projectId], references: [id])
   projectId      String
   creator        String
+  txHash         String
   createAt       DateTime @default(now())
   updatedAt      DateTime @updatedAt
   deleted        Boolean  @default(false)

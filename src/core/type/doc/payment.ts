@@ -39,6 +39,11 @@ export class CreatePaymentBody extends AuthBody {
   @ApiProperty({ type: 'string' })
   amount: string;
 
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  txHash: string;
+
   @ArrayNotEmpty()
   @IsArray()
   @ApiProperty({ isArray: true })
