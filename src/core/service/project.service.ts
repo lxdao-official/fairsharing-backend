@@ -169,7 +169,6 @@ export class ProjectService {
       voteApprove,
       voteSystem,
       voteThreshold,
-      rule,
       operatorId,
     } = body;
     await this.getProject(projectId, true);
@@ -178,7 +177,7 @@ export class ProjectService {
         id: operatorId,
       },
     });
-    if (user?.permission === Permission.Contributor) {
+    if (user?.permission !== Permission.Admin) {
       throw new HttpException(Code.NO_AUTH.message, Code.NO_AUTH.code);
     }
     this.checkVoteThreshold(voteThreshold);
@@ -194,7 +193,6 @@ export class ProjectService {
         voteApprove,
         voteSystem,
         voteThreshold,
-        rule,
       },
     });
   }
