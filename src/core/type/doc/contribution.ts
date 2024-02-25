@@ -113,11 +113,11 @@ export class GetAllocationDetailsQuery {
   @IsNumber()
   @Type(() => Number)
   @ApiProperty({ type: 'number' })
-  startDate: number;
+  endDateFrom: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
   @ApiProperty({ type: 'number' })
-  endDate: number;
+  endDateTo: number;
 }

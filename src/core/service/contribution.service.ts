@@ -295,7 +295,7 @@ export class ContributionService {
   }
 
   async getAllocationDetails(query: GetAllocationDetailsQuery) {
-    const { endDate, startDate, projectId } = query;
+    const { endDateFrom, endDateTo, projectId } = query;
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
@@ -313,11 +313,9 @@ export class ContributionService {
         projectId,
         deleted: false,
         status: Status.CLAIM,
-        startDate: {
-          gte: new Date(startDate),
-        },
         endDate: {
-          lte: new Date(endDate),
+          gte: new Date(endDateFrom),
+          lte: new Date(endDateTo),
         },
       },
     });
