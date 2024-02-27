@@ -1,3 +1,4 @@
+import { VoteSystemEnum } from '@core/type/doc/project';
 import {
   EasAttestation,
   EasAttestationData,
@@ -20,7 +21,6 @@ import {
   EasSchemaMap,
   MainEasSchemaMap,
 } from '../../config/eas';
-import { VoteSystemEnum } from "@core/type/doc/project";
 
 @Injectable()
 export class EasService {
@@ -119,7 +119,7 @@ export class EasService {
     const ABI = getVoteStrategyABI(projectDetail.voteApprove as any);
     const testKey =
       chainId === 10
-        ? 'gvJlCg5IaENekNwdoLn4Ah21yQOVvDaI'
+        ? '4i1sZ9J4U8P2TdmH5pVTw-5w7U53PPhe'
         : 'E04mwXKYzTzNMgWcfivXOvo8qQfZDqy2';
     const AlchemyApiKey = this.configService.get('ALCHEMY_KEY') || testKey;
     const provider = new AlchemyProvider(chainId, AlchemyApiKey);
