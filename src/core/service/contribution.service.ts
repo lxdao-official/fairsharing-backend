@@ -3,6 +3,7 @@ import {
   ContributionListQuery,
   CreateContributionBody,
   DeleteContributionBody,
+  GetAllocationDetailsQuery,
   PrepareClaimBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
@@ -162,7 +163,8 @@ export class ContributionService {
       credit,
       operatorId,
       type,
-      contributionDate,
+      startDate,
+      endDate,
     } = body;
     const project = await this.prisma.project.findFirst({
       where: {
@@ -194,7 +196,8 @@ export class ContributionService {
         credit,
         projectId,
         type,
-        contributionDate,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
         ownerId: operatorId,
         id,
       },
@@ -289,5 +292,41 @@ export class ContributionService {
         deleted: true,
       },
     });
+  }
+
+  async getAllocationDetails(query: GetAllocationDetailsQuery) {
+    const { endDateFrom, endDateTo, projectId } = query;
+    const project = await this.prisma.project.findFirst({
+      where: {
+        id: projectId,
+        deleted: false,
+      },
+    });
+    if (!project) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    const contributions = await this.prisma.contribution.findMany({
+      where: {
+        projectId,
+        deleted: false,
+        status: Status.CLAIM,
+        endDate: {
+          gte: new Date(endDateFrom),
+          lte: new Date(endDateTo),
+        },
+      },
+    });
+    const data: Record<string, number> = {};
+    contributions.forEach((item) => {
+      const contributorId = item.toIds[0];
+      if (!data[contributorId]) {
+        data[contributorId] = 0;
+      }
+      data[contributorId] += item.credit;
+    });
+    return data;
   }
 }

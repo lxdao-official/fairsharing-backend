@@ -132,11 +132,6 @@ export class UpdateProjectBody extends AuthBody {
   @Type(() => Number)
   @ApiProperty({ type: 'number' })
   voteThreshold: number;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({ type: 'string' })
-  rule: string;
 }
 
 export class ProjectListQuery extends PaginateQuery {

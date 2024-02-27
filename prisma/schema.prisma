@@ -42,6 +42,7 @@ model Project {
   contributors     Contributor[]
   MintReocrd       MintReocrd[]
   ContributionType ContributionType[]
+  Payment          Payment[]
 }
 
 model User {
@@ -73,6 +74,8 @@ model Contribution {
   projectId        String
   type             String[]
   contributionDate String?
+  startDate        DateTime?
+  endDate          DateTime?
   createAt         DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   deleted          Boolean     @default(false)
@@ -117,4 +120,22 @@ model MintReocrd {
   createAt      DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   deleted       Boolean      @default(false)
+}
+
+model Payment {
+  id             String   @id @default(uuid())
+  purpose        String
+  counterparties String[]
+  category       String
+  chainId        String
+  allocate       String
+  symbol         String
+  amount         String
+  project        Project  @relation(fields: [projectId], references: [id])
+  projectId      String
+  creator        String
+  txHash         String
+  createAt       DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deleted        Boolean  @default(false)
 }
