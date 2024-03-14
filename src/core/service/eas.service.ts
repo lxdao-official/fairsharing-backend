@@ -18,8 +18,8 @@ import { AlchemyProvider, ethers } from 'ethers';
 import { PrismaService } from 'nestjs-prisma';
 import {
   EAS_CHAIN_CONFIGS,
-  EasSchemaMap,
   MainEasSchemaMap,
+  SepoliaEasSchemaMap,
 } from '../../config/eas';
 
 @Injectable()
@@ -52,7 +52,7 @@ export class EasService {
   }
 
   async getEASVoteResult(uId: string, chainId?: number) {
-    const easMap = chainId === 10 ? MainEasSchemaMap : EasSchemaMap;
+    const easMap = chainId === 10 ? MainEasSchemaMap : SepoliaEasSchemaMap;
     const query = `
 		query Attestations {
 		  attestations(
@@ -120,7 +120,7 @@ export class EasService {
     const testKey =
       chainId === 10
         ? '4i1sZ9J4U8P2TdmH5pVTw-5w7U53PPhe'
-        : 'E04mwXKYzTzNMgWcfivXOvo8qQfZDqy2';
+        : 'SpD2WUULsBo9qhZi8DtfCmXu2U8RQPRZ';
     const AlchemyApiKey = this.configService.get('ALCHEMY_KEY') || testKey;
     const provider = new AlchemyProvider(chainId, AlchemyApiKey);
     const signer = this.getSigner().connect(provider);
