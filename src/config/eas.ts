@@ -56,6 +56,17 @@ export const EAS_CHAIN_CONFIGS: EASChainConfig[] = [
     rpcProvider: `https://mainnet.infura.io/v3/`,
     graphQLEndpoint: 'https://optimism-goerli-bedrock.easscan.org/graphql',
   },
+  {
+    chainId: 11155420,
+    chainName: 'optimism-sepolia',
+    subdomain: 'optimism-sepolia.',
+    version: '1.0.2',
+    contractAddress: '0x4200000000000000000000000000000000000021',
+    schemaRegistryAddress: '0x4200000000000000000000000000000000000020',
+    etherscanURL: 'https://optimism-sepolia.easscan.org',
+    rpcProvider: `https://sepolia.optimism.io`,
+    graphQLEndpoint: 'https://optimism-sepolia.easscan.org/graphql',
+  },
 ];
 
 export const EasSchemaMap = {
@@ -63,6 +74,13 @@ export const EasSchemaMap = {
     '0x0228657dc20f814b0770867d1a85ac473a0dc393c52603ef318bdab79dd9ea63',
   vote: '0xe045889447a1b5ec1e4771b23e89f38f1cf379ec2e708e1789dfbf4739cdf56f',
   claim: '0x4670eabb8d0ed4d28ed4b411defaf202695497dd78f32627dd77d3a0c4c00024',
+};
+
+export const SepoliaEasSchemaMap = {
+  contribution:
+    '0xa429ad803ae12a0fcb9c0c130673a4c7357da08e1407b62bce5cfe358d673526',
+  vote: '0x6e4068d80a37bc2fb9223e2f07b909b98b370d76b1d94cd83c1a64bb6006a9e5',
+  claim: '0x957c1ce9579ea03fcd9e08f0ef9d0ef4ba3ca67f7b459655bcf87a060fd772ca',
 };
 
 export const MainEasSchemaMap = {

@@ -20,11 +20,24 @@ export class ContributionService {
   constructor(private prisma: PrismaService, private easService: EasService) {}
 
   async getContributionList(query: ContributionListQuery) {
-    const { projectId, currentPage, pageSize, wallet = '' } = query;
+    const {
+      projectId,
+      currentPage,
+      pageSize,
+      wallet = '',
+      endDateFrom,
+      endDateTo,
+    } = query;
     const where = {
       deleted: false,
       projectId,
     };
+    if (endDateTo && endDateFrom) {
+      where['endDate'] = {
+        gte: new Date(endDateFrom),
+        lte: new Date(endDateTo),
+      };
+    }
     if (wallet) {
       const user = await this.prisma.contributor.findFirst({
         where: {

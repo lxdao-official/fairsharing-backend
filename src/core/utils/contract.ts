@@ -34,6 +34,12 @@ const VoteStrategyMap = {
     AbsoluteV1: '0xE0289920f9aB0d1303e6c53CE3A124509fbe55e1',
     AbsoluteV2: '0xF919c9C0345f381de69EAA89ED20791Aca00CFcE',
   },
+  11155420: {
+    RelativeV1: '0x7c0a966f373a3935D51fa29a239FC54e1d981aA6',
+    RelativeV2: '0x4911fC85BfED269f7A37214028CF428C637Bc196',
+    AbsoluteV1: '0x9843cdD2F79723596df556068759cDA510602b92',
+    AbsoluteV2: '0xe5ffAF764995fD864651bb71f4bb1d6ffe17665F',
+  },
 };
 
 export function getVoteStrategyABI(voteApproveType: VoteApproveEnum) {

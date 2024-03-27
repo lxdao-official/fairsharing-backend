@@ -20,6 +20,18 @@ export class ContributionListQuery extends PaginateQuery {
   @IsString()
   @ApiProperty({ type: 'string' })
   wallet: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  endDateFrom?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({ type: 'number' })
+  endDateTo?: number;
 }
 
 export class UpdateContributionStateBody extends AuthBody {
