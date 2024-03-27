@@ -120,7 +120,7 @@ export class EasService {
     const testKey =
       chainId === 10
         ? '4i1sZ9J4U8P2TdmH5pVTw-5w7U53PPhe'
-        : 'SpD2WUULsBo9qhZi8DtfCmXu2U8RQPRZ';
+        : '24B-9uSD-ck0hRLnIwu3Fp4piDCUVlU9';
     const AlchemyApiKey = this.configService.get('ALCHEMY_KEY') || testKey;
     const provider = new AlchemyProvider(chainId, AlchemyApiKey);
     const signer = this.getSigner().connect(provider);
