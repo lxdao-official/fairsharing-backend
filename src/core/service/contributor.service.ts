@@ -77,6 +77,7 @@ export class ContributorService {
               nickName: item.nickName,
               role: item.role,
               voteWeight: item.voteWeight,
+              wallet: item.wallet,
             },
           });
         } else {
