@@ -308,7 +308,7 @@ export class ContributionService {
   }
 
   async getAllocationDetails(query: GetAllocationDetailsQuery) {
-    const { endDateFrom, endDateTo, projectId } = query;
+    const { endDateFrom, endDateTo, projectId, type } = query;
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
@@ -321,6 +321,17 @@ export class ContributionService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
+    let filterCondition = {};
+    if (type.length > 0) {
+      filterCondition = {
+        where: {
+          dataArray: {
+            has: type,
+          },
+        },
+      };
+    }
+
     const contributions = await this.prisma.contribution.findMany({
       where: {
         projectId,
@@ -330,6 +341,7 @@ export class ContributionService {
           gte: new Date(endDateFrom),
           lte: new Date(endDateTo),
         },
+        ...filterCondition,
       },
     });
     const data: Record<string, number> = {};
