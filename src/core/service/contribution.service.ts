@@ -308,7 +308,7 @@ export class ContributionService {
   }
 
   async getAllocationDetails(query: GetAllocationDetailsQuery) {
-    const { endDateFrom, endDateTo, projectId, type } = query;
+    const { endDateFrom, endDateTo, projectId, type = '' } = query;
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
@@ -322,11 +322,12 @@ export class ContributionService {
       );
     }
     let filterCondition = {};
-    if (type.length > 0) {
+    const typeArray = type.split(',');
+    if (typeArray.length > 0) {
       filterCondition = {
         where: {
           dataArray: {
-            has: type,
+            has: typeArray,
           },
         },
       };

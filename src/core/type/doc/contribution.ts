@@ -134,7 +134,6 @@ export class GetAllocationDetailsQuery {
   endDateTo: number;
 
   @IsOptional()
-  @IsArray()
-  @ApiProperty({ isArray: true })
-  type: string[];
+  @IsString()
+  type: string;
 }
