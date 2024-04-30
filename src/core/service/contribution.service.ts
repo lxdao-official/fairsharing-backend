@@ -325,7 +325,7 @@ export class ContributionService {
     const typeArray = type.split(',');
     if (typeArray.length > 0) {
       filterCondition = {
-        dataArray: {
+        type: {
           has: typeArray,
         },
       };
