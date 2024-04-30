@@ -322,11 +322,11 @@ export class ContributionService {
       );
     }
     let filterCondition = {};
-    const typeArray = type.split(',');
+    const typeArray = type.length > 0 ? type.split(',') : [];
     if (typeArray.length > 0) {
       filterCondition = {
         type: {
-          has: typeArray,
+          hasEvery: typeArray,
         },
       };
     }
