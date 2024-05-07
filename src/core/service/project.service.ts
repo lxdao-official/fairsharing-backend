@@ -210,7 +210,7 @@ export class ProjectService {
         },
       });
     }
-    return this.prisma.mintReocrd.findMany({
+    const result = await this.prisma.mintReocrd.findMany({
       where: {
         projectId,
         deleted: false,
@@ -223,6 +223,7 @@ export class ProjectService {
         },
       },
     });
+    return result.filter((item) => item.contributor);
   }
 
   async createContributionType(
