@@ -132,4 +132,8 @@ export class GetAllocationDetailsQuery {
   @Type(() => Number)
   @ApiProperty({ type: 'number' })
   endDateTo: number;
+
+  @IsOptional()
+  @IsString()
+  type: string;
 }

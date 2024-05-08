@@ -186,10 +186,10 @@ export class ContributorService {
 
   checkWeightAmount(contributors: Contributor[]) {
     const sum = contributors.reduce(
-      (prev, cur) => prev + Number(cur.voteWeight),
+      (prev, cur) => prev + Number(cur.voteWeight) * 100,
       0,
     );
-    if (sum !== 1) {
+    if (sum !== 100) {
       throw new HttpException(
         Code.WEIGHT_AMOUNT_ERROR.message,
         Code.WEIGHT_AMOUNT_ERROR.code,
