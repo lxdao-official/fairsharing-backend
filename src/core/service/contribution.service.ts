@@ -358,31 +358,31 @@ export class ContributionService {
   }
 
   async test() {
-    const ids = await this.easService.getEASList(10);
-    const data = await this.prisma.contribution.findMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-    });
-    const unClaimed = [];
-    for (let i = 0; i < data.length; i++) {
-      const item = data[i];
-      if (item.status !== Status.CLAIM) {
-        unClaimed.push(item);
-        await this.updateContributionState(
-          item.id,
-          {
-            type: 'claim',
-            uId: item.uId,
-          },
-          true,
-        );
-      } else {
-        return;
-      }
-    }
-    return unClaimed;
+    return await this.easService.getEASList(1);
+    // const data = await this.prisma.contribution.findMany({
+    //   where: {
+    //     id: {
+    //       in: ids,
+    //     },
+    //   },
+    // });
+    // const unClaimed = [];
+    // for (let i = 0; i < data.length; i++) {
+    //   const item = data[i];
+    //   if (item.status !== Status.CLAIM) {
+    //     unClaimed.push(item);
+    //     await this.updateContributionState(
+    //       item.id,
+    //       {
+    //         type: 'claim',
+    //         uId: item.uId,
+    //       },
+    //       true,
+    //     );
+    //   } else {
+    //     return;
+    //   }
+    // }
+    // return unClaimed;
   }
 }
