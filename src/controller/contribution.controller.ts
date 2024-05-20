@@ -73,8 +73,8 @@ export class ContributionController {
   }
 
   @Get('test')
-  async test() {
-    const data = await this.contributionService.test();
+  async test(@Query('chainId') chainId: number) {
+    const data = await this.contributionService.test(chainId);
     return CoreApiResponse.success(data);
   }
 }

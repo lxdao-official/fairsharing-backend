@@ -357,8 +357,8 @@ export class ContributionService {
     return data;
   }
 
-  async test() {
-    return await this.easService.getEASList(1);
+  async test(chainId: number) {
+    return await this.easService.getEASList(chainId);
     // const data = await this.prisma.contribution.findMany({
     //   where: {
     //     id: {
