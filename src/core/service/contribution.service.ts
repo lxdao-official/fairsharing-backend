@@ -366,23 +366,24 @@ export class ContributionService {
         },
       },
     });
-    const unClaimed = [];
-    for (let i = 0; i < data.length; i++) {
-      const item = data[i];
-      if (item.status !== Status.CLAIM) {
-        unClaimed.push(item);
-        await this.updateContributionState(
-          item.id,
-          {
-            type: 'claim',
-            uId: item.uId,
-          },
-          true,
-        );
-      } else {
-        return;
-      }
-    }
-    return unClaimed;
+    return data;
+    // const unClaimed = [];
+    // for (let i = 0; i < data.length; i++) {
+    //   const item = data[i];
+    //   if (item.status !== Status.CLAIM) {
+    //     unClaimed.push(item);
+    //     await this.updateContributionState(
+    //       item.id,
+    //       {
+    //         type: 'claim',
+    //         uId: item.uId,
+    //       },
+    //       true,
+    //     );
+    //   } else {
+    //     return;
+    //   }
+    // }
+    // return unClaimed;
   }
 }
