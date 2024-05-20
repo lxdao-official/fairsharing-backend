@@ -72,9 +72,9 @@ export class ContributionController {
     return CoreApiResponse.success(data);
   }
 
-  @Get('test')
-  async test(@Query('chainId') chainId: number) {
-    const data = await this.contributionService.test(chainId);
+  @Get('syncUnClaimed')
+  async syncUnClaimed(@Query('chainId') chainId: number) {
+    const data = await this.contributionService.syncUnClaimed(chainId);
     return CoreApiResponse.success(data);
   }
 }
