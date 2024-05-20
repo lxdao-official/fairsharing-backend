@@ -57,6 +57,7 @@ export class EasService {
 		query Attestations {
 		  attestations(
 		  take: 100,
+		  orderBy: {time: desc},
 			where: {
 			  schemaId: {
 				equals: "${easMap.claim}"
