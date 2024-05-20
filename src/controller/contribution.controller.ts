@@ -71,4 +71,10 @@ export class ContributionController {
     const data = await this.contributionService.getAllocationDetails(query);
     return CoreApiResponse.success(data);
   }
+
+  @Get('test')
+  async test() {
+    const data = await this.contributionService.test();
+    return CoreApiResponse.success(data);
+  }
 }

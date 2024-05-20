@@ -51,6 +51,52 @@ export class EasService {
     return signerWallet.signMessage(ethers.getBytes(hash));
   }
 
+  async getEASList(chainId?: number) {
+    const easMap = chainId === 10 ? MainEasSchemaMap : SepoliaEasSchemaMap;
+    const query = `
+		query Attestations {
+		  attestations(
+		  take: 100,
+			where: {
+			  schemaId: {
+				equals: "${easMap.claim}"
+			  }
+			}
+		  ) {
+			id
+			refUID
+			ipfsHash
+			recipient
+			decodedDataJson
+			data
+			attester
+			revocable
+			revoked
+		  }
+		}
+	`;
+    const { data } = await axios.post<{
+      data: { attestations: EasAttestation<EasSchemaVoteKey>[] };
+    }>(this.getGraphEndpoint(chainId), {
+      query,
+    });
+    const easVoteList = data.data.attestations.map((item) => ({
+      ...item,
+      decodedDataJson: JSON.parse(
+        item.decodedDataJson as string,
+      ) as EasAttestationDecodedData<EasSchemaVoteKey>[],
+    }));
+    const contributionIds = [];
+    easVoteList.forEach((item) => {
+      item.decodedDataJson.forEach((item) => {
+        if (item.name === 'ContributionID') {
+          contributionIds.push(item.value.value);
+        }
+      });
+    });
+    return contributionIds;
+  }
+
   async getEASVoteResult(uId: string, chainId?: number) {
     const easMap = chainId === 10 ? MainEasSchemaMap : SepoliaEasSchemaMap;
     const query = `

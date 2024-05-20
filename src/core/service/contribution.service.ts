@@ -69,6 +69,7 @@ export class ContributionService {
   async updateContributionState(
     contributionId: string,
     body: UpdateContributionStateBody,
+    skipUser = false,
   ) {
     const { type, uId, operatorId } = body;
     const contribution = await this.prisma.contribution.findFirst({
@@ -85,17 +86,19 @@ export class ContributionService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
-    const user = await this.prisma.contributor.findFirst({
-      where: {
-        projectId: contribution.projectId,
-        id: operatorId,
-      },
-    });
-    if (!user) {
-      throw new HttpException(
-        Code.CONTRIBUTION_CLAIM_AUTH_ERROR.message,
-        Code.CONTRIBUTION_CLAIM_AUTH_ERROR.code,
-      );
+    if (!skipUser) {
+      const user = await this.prisma.contributor.findFirst({
+        where: {
+          projectId: contribution.projectId,
+          id: operatorId,
+        },
+      });
+      if (!user) {
+        throw new HttpException(
+          Code.CONTRIBUTION_CLAIM_AUTH_ERROR.message,
+          Code.CONTRIBUTION_CLAIM_AUTH_ERROR.code,
+        );
+      }
     }
     const statusMap = {
       claim: Status.CLAIM,
@@ -352,5 +355,34 @@ export class ContributionService {
       data[contributorId] += item.credit;
     });
     return data;
+  }
+
+  async test() {
+    const ids = await this.easService.getEASList(10);
+    const data = await this.prisma.contribution.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+    const unClaimed = [];
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      if (item.status !== Status.CLAIM) {
+        unClaimed.push(item);
+        await this.updateContributionState(
+          item.id,
+          {
+            type: 'claim',
+            uId: item.uId,
+          },
+          true,
+        );
+      } else {
+        return;
+      }
+    }
+    return unClaimed;
   }
 }
