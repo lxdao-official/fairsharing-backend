@@ -86,7 +86,6 @@ export class EasService {
         item.decodedDataJson as string,
       ) as EasAttestationDecodedData<EasSchemaVoteKey>[],
     }));
-    console.log(data.data.attestations);
     const contributionIds = [];
     easVoteList.forEach((item) => {
       item.decodedDataJson.forEach((item) => {
