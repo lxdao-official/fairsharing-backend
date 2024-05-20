@@ -357,7 +357,7 @@ export class ContributionService {
     return data;
   }
 
-  async test(chainId: number) {
+  async syncUnClaimed(chainId: number) {
     const ids = await this.easService.getEASList(chainId);
     const data = await this.prisma.contribution.findMany({
       where: {
