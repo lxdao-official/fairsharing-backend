@@ -89,6 +89,11 @@ export class CreateContributionBody extends AuthBody {
   @Type(() => Number)
   @ApiProperty({ type: 'number' })
   endDate: number;
+
+  @IsOptional()
+  @IsArray()
+  @ApiProperty({ isArray: true })
+  imageList?: string[];
 }
 
 export class PrepareClaimBody {
