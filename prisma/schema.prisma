@@ -74,6 +74,7 @@ model Contribution {
   projectId        String
   type             String[]
   contributionDate String?
+  imageList        String[]
   startDate        DateTime?
   endDate          DateTime?
   createAt         DateTime    @default(now())
