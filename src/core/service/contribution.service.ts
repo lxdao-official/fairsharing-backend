@@ -181,6 +181,7 @@ export class ContributionService {
       type,
       startDate,
       endDate,
+      imageList = [],
     } = body;
     const project = await this.prisma.project.findFirst({
       where: {
@@ -216,6 +217,7 @@ export class ContributionService {
         endDate: new Date(endDate),
         ownerId: operatorId,
         id,
+        imageList,
       },
     });
   }
