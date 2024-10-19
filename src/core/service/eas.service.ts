@@ -51,14 +51,41 @@ export class EasService {
     return signerWallet.signMessage(ethers.getBytes(hash));
   }
 
-  async getEASList(chainId?: number) {
+  async getEASList(chainId?: number, uIds?: string) {
     const easMap = chainId === 10 ? MainEasSchemaMap : SepoliaEasSchemaMap;
-    const query = `
+    const query = uIds
+      ? `
 		query Attestations {
 		  attestations(
 		  take: 100,
 		  orderBy: {time: desc},
 			where: {
+			  schemaId: {
+				equals: "${easMap.claim}"
+			  }
+			}
+		  ) {
+			id
+			refUID
+			ipfsHash
+			recipient
+			decodedDataJson
+			data
+			attester
+			revocable
+			revoked
+		  }
+		}
+	`
+      : `
+		query Attestations {
+		  attestations(
+			where: {
+			  id: {
+				in: [
+				  ${uIds}
+				]
+			  },
 			  schemaId: {
 				equals: "${easMap.claim}"
 			  }

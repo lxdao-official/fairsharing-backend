@@ -360,8 +360,17 @@ export class ContributionService {
   }
 
   async syncUnClaimed(chainId: number) {
-    const ids = await this.easService.getEASList(chainId);
-    const data = await this.prisma.contribution.findMany({
+    let data = await this.prisma.contribution.findMany({
+      where: {
+        status: Status.READY,
+      },
+    });
+    const unClaimedIds = data.map((item) => item.uId);
+    const id_in = unClaimedIds.reduce((pre, cur) => {
+      return pre + `${pre ? '\n' : ''}` + `"${cur}"`;
+    }, '');
+    const ids = await this.easService.getEASList(chainId, id_in);
+    data = await this.prisma.contribution.findMany({
       where: {
         id: {
           in: ids,
