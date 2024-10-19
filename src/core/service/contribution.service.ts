@@ -394,4 +394,22 @@ export class ContributionService {
     }
     return unClaimed;
   }
+
+  async getAllUnClaimedList(query: ContributionListQuery) {
+    const { projectId, endDateFrom, endDateTo } = query;
+    const where = {
+      deleted: false,
+      projectId,
+      status: Status.READY,
+    };
+    if (endDateTo && endDateFrom) {
+      where['endDate'] = {
+        gte: new Date(endDateFrom),
+        lte: new Date(endDateTo),
+      };
+    }
+    return this.prisma.contribution.findMany({
+      where,
+    });
+  }
 }
