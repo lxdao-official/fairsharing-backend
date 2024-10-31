@@ -31,6 +31,9 @@ export class ContributionService {
     const where = {
       deleted: false,
       projectId,
+      status: {
+        in: [Status.READY, Status.CLAIM],
+      },
     };
     if (endDateTo && endDateFrom) {
       where['endDate'] = {
