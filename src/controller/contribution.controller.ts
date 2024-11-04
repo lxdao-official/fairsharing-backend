@@ -77,4 +77,10 @@ export class ContributionController {
     const data = await this.contributionService.syncUnClaimed(chainId);
     return CoreApiResponse.success(data);
   }
+
+  @Get('allUnClaimedList')
+  async allUnClaimedList(@Query() query: ContributionListQuery) {
+    const data = await this.contributionService.getAllUnClaimedList(query);
+    return CoreApiResponse.success(data);
+  }
 }

@@ -31,6 +31,9 @@ export class ContributionService {
     const where = {
       deleted: false,
       projectId,
+      status: {
+        in: [Status.READY, Status.CLAIM],
+      },
     };
     if (endDateTo && endDateFrom) {
       where['endDate'] = {
@@ -360,8 +363,17 @@ export class ContributionService {
   }
 
   async syncUnClaimed(chainId: number) {
-    const ids = await this.easService.getEASList(chainId);
-    const data = await this.prisma.contribution.findMany({
+    let data = await this.prisma.contribution.findMany({
+      where: {
+        status: Status.READY,
+      },
+    });
+    const unClaimedIds = data.map((item) => item.uId);
+    const id_in = unClaimedIds.reduce((pre, cur) => {
+      return pre + `${pre ? '\n' : ''}` + `"${cur}"`;
+    }, '');
+    const ids = await this.easService.getEASList(chainId, id_in);
+    data = await this.prisma.contribution.findMany({
       where: {
         id: {
           in: ids,
@@ -384,5 +396,23 @@ export class ContributionService {
       }
     }
     return unClaimed;
+  }
+
+  async getAllUnClaimedList(query: ContributionListQuery) {
+    const { projectId, endDateFrom, endDateTo } = query;
+    const where = {
+      deleted: false,
+      projectId,
+      status: Status.READY,
+    };
+    if (endDateTo && endDateFrom) {
+      where['endDate'] = {
+        gte: new Date(endDateFrom),
+        lte: new Date(endDateTo),
+      };
+    }
+    return this.prisma.contribution.findMany({
+      where,
+    });
   }
 }
