@@ -42,6 +42,7 @@ model Project {
   contributors     Contributor[]
   MintReocrd       MintReocrd[]
   ContributionType ContributionType[]
+  allocations      Allocation[]
   Payment          Payment[]
 }
 
@@ -139,4 +140,64 @@ model Payment {
   createAt       DateTime @default(now())
   updatedAt      DateTime @updatedAt
   deleted        Boolean  @default(false)
+}
+
+enum AllocationStatus {
+  INITIAL
+  ATTESTED
+  REVOKED
+}
+
+model Allocation {
+  id        String             @id
+  uId       String?            @unique
+  projectId String
+  project   Project            @relation(fields: [projectId], references: [id])
+  title     String
+  creator   String
+  status    AllocationStatus   @default(INITIAL)
+  details   AllocationDetail[]
+  createAt  DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  deleted   Boolean            @default(false)
+}
+
+model AllocationDetail {
+  id           String     @id @default(uuid())
+  allocationId String
+  allocation   Allocation @relation(fields: [allocationId], references: [id])
+  wallet       String
+  ratio        Int
+  amount       String
+  createAt     DateTime   @default(now())
+}
+
+model IncentivePool {
+  id           String                @id @default(uuid())
+  allocationId String
+  projectId    String
+  creator      String
+  timeToClaim  Int
+  depositor    String
+  details      IncentivePoolDetail[]
+  createAt     DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  deleted      Boolean               @default(false)
+}
+
+enum IncentiveCLAIMStatus {
+  UNCLAIMED
+  CLAIMED
+}
+
+model IncentivePoolDetail {
+  id       String               @id @default(uuid())
+  poolId   String
+  pool     IncentivePool        @relation(fields: [poolId], references: [id])
+  token    String
+  wallet   String
+  amount   String
+  ratio    Int
+  status   IncentiveCLAIMStatus @default(UNCLAIMED)
+  createAt DateTime             @default(now())
 }
