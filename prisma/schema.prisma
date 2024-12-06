@@ -173,12 +173,14 @@ model AllocationDetail {
 }
 
 model IncentivePool {
-  id           String                @id @default(uuid())
+  id           String                @id
   allocationId String
   projectId    String
+  address      String
   creator      String
   timeToClaim  Int
   depositor    String
+  wallets      String[]
   details      IncentivePoolDetail[]
   createAt     DateTime              @default(now())
   updatedAt    DateTime              @updatedAt
@@ -191,13 +193,16 @@ enum IncentiveCLAIMStatus {
 }
 
 model IncentivePoolDetail {
-  id       String               @id @default(uuid())
-  poolId   String
-  pool     IncentivePool        @relation(fields: [poolId], references: [id])
-  token    String
-  wallet   String
-  amount   String
-  ratio    Int
-  status   IncentiveCLAIMStatus @default(UNCLAIMED)
-  createAt DateTime             @default(now())
+  id        String               @id @default(uuid())
+  projectId    String
+  poolId    String
+  pool      IncentivePool        @relation(fields: [poolId], references: [id])
+  token     String
+  wallet    String
+  amount    String
+  ratio     Int
+  status    IncentiveCLAIMStatus @default(UNCLAIMED)
+  createAt  DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  deleted   Boolean              @default(false)
 }
