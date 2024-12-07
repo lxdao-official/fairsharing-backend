@@ -25,6 +25,7 @@ export class AllocationService {
     });
     const user = await this.prisma.contributor.findFirst({
       where: {
+        projectId: projectId,
         id: operatorId,
       },
     });
