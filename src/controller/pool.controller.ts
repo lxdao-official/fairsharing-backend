@@ -23,7 +23,7 @@ export class PoolController {
 
   @Post('create')
   async createPool(@Body() body: CreatePoolBody) {
-    const result = this.poolService.createPool(body);
+    const result = await this.poolService.createPool(body);
     return CoreApiResponse.success(result);
   }
 
@@ -35,7 +35,7 @@ export class PoolController {
 
   @Post('claim')
   async claim(@Body() body: ClaimBody) {
-    const result = this.poolService.contributorClaim(body);
+    const result = await this.poolService.contributorClaim(body);
     return CoreApiResponse.success(result);
   }
 }

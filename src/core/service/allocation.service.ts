@@ -13,7 +13,23 @@ import { PrismaService } from 'nestjs-prisma';
 export class AllocationService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllocationList(query: AllocationListQuery) {}
+  async getAllocationList(query: AllocationListQuery) {
+    const { projectId } = query;
+    const project = await this.prisma.project.findFirst({
+      where: {
+        id: projectId,
+      },
+    });
+    if (!project) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+    return this.prisma.allocation.findMany({
+      where: { projectId, deleted: false },
+    });
+  }
 
   async create(body: CreateAllocationBody) {
     const { title, projectId, contributors, ratios, credits, operatorId } =
@@ -66,8 +82,11 @@ export class AllocationService {
         }),
       );
     });
+    await this.prisma.$transaction(fns);
 
-    return this.prisma.$transaction(fns);
+    return {
+      id,
+    };
   }
 
   async updateAllocationState(

@@ -1,12 +1,10 @@
 import { AuthBody } from '@core/type/doc/auth';
 import { PaginateQuery } from '@core/type/doc/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -17,17 +15,15 @@ export class AllocationListQuery extends PaginateQuery {
   @ApiProperty({ type: 'string' })
   projectId: string;
 
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({ type: 'number' })
-  dateFrom?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({ type: 'number' })
-  dateTo?: number;
+  // @IsOptional()
+  // @Type(() => Number)
+  // @ApiProperty({ type: 'number' })
+  // dateFrom?: number;
+  //
+  // @IsOptional()
+  // @Type(() => Number)
+  // @ApiProperty({ type: 'number' })
+  // dateTo?: number;
 }
 
 export class UpdateAllocationStatusBody extends AuthBody {

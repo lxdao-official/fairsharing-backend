@@ -1,9 +1,19 @@
 import { CoreApiResponse } from '@core/api/coreApiResponse';
 import {
+  AllocationListQuery,
   CreateAllocationBody,
   UpdateAllocationStatusBody,
 } from '@core/type/doc/allocation';
-import { Body, Controller, Inject, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { AllocationService } from '@service/allocation.service';
 
 @Controller('allocation')
@@ -13,12 +23,15 @@ export class AllocationController {
     private readonly allocationService: AllocationService,
   ) {}
 
-  // @Get('list')
-  // async getAllocations(@Query() query: AllocationListQuery) {}
+  @Get('list')
+  async getAllocations(@Query() query: AllocationListQuery) {
+    const result = await this.allocationService.getAllocationList(query);
+    return CoreApiResponse.success(result);
+  }
 
   @Post('create')
   async createAllocation(@Body() body: CreateAllocationBody) {
-    const result = this.allocationService.create(body);
+    const result = await this.allocationService.create(body);
     return CoreApiResponse.success(result);
   }
 
