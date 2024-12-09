@@ -37,11 +37,11 @@ export class AllocationController {
 
   @Put(':allocationId/updateState')
   async updateAllocationState(
-    @Param('contributionId') contributionId: string,
+    @Param('allocationId') allocationId: string,
     @Body() body: UpdateAllocationStatusBody,
   ) {
     const result = await this.allocationService.updateAllocationState(
-      contributionId,
+      allocationId,
       body,
     );
     return CoreApiResponse.success(result);

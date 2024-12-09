@@ -124,9 +124,9 @@ export class AllocationService {
     return this.prisma.allocation.update({
       where: {
         id: allocationId,
-        uId: uId,
       },
       data: {
+        uId: uId,
         status: status,
       },
     });
