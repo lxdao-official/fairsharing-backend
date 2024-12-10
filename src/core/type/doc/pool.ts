@@ -41,10 +41,10 @@ export class ClaimStatusQuery {
   @ApiProperty({ type: 'string' })
   wallet: string;
 
-  @ArrayNotEmpty()
-  @IsArray()
-  @ApiProperty({ isArray: true })
-  pools: string[];
+  // @ArrayNotEmpty()
+  // @IsArray()
+  // @ApiProperty({ isArray: true })
+  // pools: string[];
 }
 
 export class CreatePoolBody extends AuthBody {

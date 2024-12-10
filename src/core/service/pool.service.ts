@@ -23,7 +23,7 @@ export class PoolService {
     const where = { projectId: projectId, deleted: false };
 
     if (endDateTo && endDateFrom) {
-      where['endDate'] = {
+      where['createAt'] = {
         gte: new Date(endDateFrom),
         lte: new Date(endDateTo),
       };
