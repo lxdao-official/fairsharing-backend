@@ -135,7 +135,9 @@ export class PoolService {
       }
     }
 
-    return this.prisma.$transaction(fns);
+    await this.prisma.$transaction(fns);
+
+    return { id };
   }
 
   async contributorClaim(body: ClaimBody) {
@@ -181,5 +183,9 @@ export class PoolService {
         }),
       );
     });
+
+    return {
+      poolId,
+    };
   }
 }
