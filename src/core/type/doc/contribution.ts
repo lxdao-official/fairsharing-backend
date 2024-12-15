@@ -142,3 +142,20 @@ export class GetAllocationDetailsQuery {
   @IsString()
   type: string;
 }
+
+export class SubmitSignedAttestationBody {
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ type: 'number' })
+  chainId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  filename: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string' })
+  textJson: string;
+}

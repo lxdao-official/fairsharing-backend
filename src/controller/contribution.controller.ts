@@ -5,6 +5,7 @@ import {
   DeleteContributionBody,
   GetAllocationDetailsQuery,
   PrepareClaimBody,
+  SubmitSignedAttestationBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import {
@@ -81,6 +82,12 @@ export class ContributionController {
   @Get('allUnClaimedList')
   async allUnClaimedList(@Query() query: ContributionListQuery) {
     const data = await this.contributionService.getAllUnClaimedList(query);
+    return CoreApiResponse.success(data);
+  }
+
+  @Post('submitSignedAttestation')
+  async submitSignedAttestation(@Body() body: SubmitSignedAttestationBody) {
+    const data = await this.contributionService.submitSignedAttestation(body);
     return CoreApiResponse.success(data);
   }
 }

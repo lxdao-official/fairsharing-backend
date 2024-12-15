@@ -1,3 +1,4 @@
+import { SubmitSignedAttestationBody } from '@core/type/doc/contribution';
 import { VoteSystemEnum } from '@core/type/doc/project';
 import {
   EasAttestation,
@@ -21,6 +22,12 @@ import {
   MainEasSchemaMap,
   SepoliaEasSchemaMap,
 } from '../../config/eas';
+
+type StoreIPFSActionReturn = {
+  error: null | string;
+  ipfsHash: string | null;
+  offchainAttestationId: string | null;
+};
 
 @Injectable()
 export class EasService {
@@ -230,5 +237,20 @@ export class EasService {
       EAS_CHAIN_CONFIGS.find((config) => config.chainId === chainId) ||
       EAS_CHAIN_CONFIGS[3];
     return activeChainConfig.graphQLEndpoint;
+  }
+
+  private getEASScanEndPoint(chainId: number) {
+    const activeChainConfig =
+      EAS_CHAIN_CONFIGS.find((config) => config.chainId === chainId) ||
+      EAS_CHAIN_CONFIGS[3];
+    return activeChainConfig.etherscanURL;
+  }
+
+  async submitSignedAttestation(body: SubmitSignedAttestationBody) {
+    const domain = this.getEASScanEndPoint(body.chainId);
+    return await axios.post<StoreIPFSActionReturn>(`${domain}/offchain/store`, {
+      filename: body.filename,
+      textJson: body.textJson,
+    });
   }
 }

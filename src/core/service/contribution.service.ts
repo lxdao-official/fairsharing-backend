@@ -5,6 +5,7 @@ import {
   DeleteContributionBody,
   GetAllocationDetailsQuery,
   PrepareClaimBody,
+  SubmitSignedAttestationBody,
   UpdateContributionStateBody,
 } from '@core/type/doc/contribution';
 import { paginate } from '@core/utils/paginator';
@@ -414,5 +415,9 @@ export class ContributionService {
     return this.prisma.contribution.findMany({
       where,
     });
+  }
+
+  async submitSignedAttestation(body: SubmitSignedAttestationBody) {
+    return this.easService.submitSignedAttestation(body);
   }
 }
