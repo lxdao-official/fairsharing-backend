@@ -248,9 +248,13 @@ export class EasService {
 
   async submitSignedAttestation(body: SubmitSignedAttestationBody) {
     const domain = this.getEASScanEndPoint(body.chainId);
-    return await axios.post<StoreIPFSActionReturn>(`${domain}/offchain/store`, {
-      filename: body.filename,
-      textJson: body.textJson,
-    });
+    const { data } = await axios.post<StoreIPFSActionReturn>(
+      `${domain}/offchain/store`,
+      {
+        filename: body.filename,
+        textJson: body.textJson,
+      },
+    );
+    return { data };
   }
 }
