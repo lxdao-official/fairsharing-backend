@@ -149,17 +149,18 @@ enum AllocationStatus {
 }
 
 model Allocation {
-  id        String             @id
-  uId       String?            @unique
-  projectId String
-  project   Project            @relation(fields: [projectId], references: [id])
-  title     String
-  creator   String
-  status    AllocationStatus   @default(INITIAL)
-  details   AllocationDetail[]
-  createAt  DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  deleted   Boolean            @default(false)
+  id            String             @id
+  uId           String?            @unique
+  projectId     String
+  project       Project            @relation(fields: [projectId], references: [id])
+  title         String
+  creator       String
+  status        AllocationStatus   @default(INITIAL)
+  details       AllocationDetail[]
+  createAt      DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  deleted       Boolean            @default(false)
+  IncentivePool IncentivePool[]
 }
 
 model AllocationDetail {
@@ -175,6 +176,7 @@ model AllocationDetail {
 model IncentivePool {
   id           String                @id
   allocationId String
+  allocation   Allocation            @relation(fields: [allocationId], references: [id])
   projectId    String
   address      String
   creator      String
@@ -194,7 +196,7 @@ enum IncentiveCLAIMStatus {
 
 model IncentivePoolDetail {
   id        String               @id @default(uuid())
-  projectId    String
+  projectId String
   poolId    String
   pool      IncentivePool        @relation(fields: [poolId], references: [id])
   token     String

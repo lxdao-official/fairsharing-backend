@@ -33,6 +33,9 @@ export class PoolService {
       this.prisma.incentivePool,
       {
         where,
+        include: {
+          allocation: true,
+        },
       },
       {
         pageSize,
@@ -183,9 +186,21 @@ export class PoolService {
         }),
       );
     });
+    await this.prisma.$transaction(fns);
 
     return {
       poolId,
     };
+  }
+
+  async syncUnClaimed(chainId: number, poolId: string) {
+    const pool = await this.prisma.incentivePool.findFirst({
+      where: {
+        id: poolId,
+      },
+      include: {
+        details: true,
+      },
+    });
   }
 }
