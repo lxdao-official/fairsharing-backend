@@ -170,7 +170,7 @@ export class PoolService {
     const tokens = await this.prisma.incentivePoolDetail.findMany({
       where: {
         poolId: poolId,
-        wallet: operatorId,
+        wallet: user.wallet,
       },
     });
     const fns = [];
