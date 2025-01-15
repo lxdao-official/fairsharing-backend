@@ -21,6 +21,11 @@ const VoteStrategyABIMap = {
   ),
 };
 
+export const IntcentivePoolABI = fs.readFileSync(
+  path.resolve(__dirname, '../../abi/incentive_pool_abi.json'),
+  'utf-8',
+);
+
 const VoteStrategyMap = {
   420: {
     RelativeV1: '0xCdff95c4a99c1A645D6Be65c01be027cFE8cDC26',

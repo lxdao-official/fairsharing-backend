@@ -182,3 +182,15 @@ export class ClaimBody extends AuthBody {
   @ApiProperty({ type: 'string', description: '激励池 id' })
   poolId: string;
 }
+
+export class SyncUnClaimBody {
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ type: 'number', description: '当前公链 id' })
+  chainId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: 'string', description: '激励池 id' })
+  poolId: string;
+}

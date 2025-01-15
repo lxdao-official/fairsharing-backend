@@ -6,16 +6,21 @@ import {
   PoolListQuery,
   PoolTokenBody,
 } from '@core/type/doc/pool';
+import { IntcentivePoolABI } from '@core/utils/contract';
 import { paginate } from '@core/utils/paginator';
 import { HttpException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { IncentiveCLAIMStatus } from '@prisma/client';
 import * as dayjs from 'dayjs';
-import { ethers } from 'ethers';
+import { AlchemyProvider, ethers } from 'ethers';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class PoolService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
 
   async getList(query: PoolListQuery) {
     const { projectId, currentPage, pageSize, endDateFrom, endDateTo } = query;
@@ -143,6 +148,31 @@ export class PoolService {
     return { id };
   }
 
+  async _updateClaimStatus(poolId: string, wallet: string) {
+    const details = await this.prisma.incentivePoolDetail.findMany({
+      where: {
+        poolId: poolId,
+        wallet: wallet,
+      },
+    });
+    const fns = [];
+    console.log('update claim status:', poolId);
+    details.forEach((detail, index) => {
+      console.log('pool detail id:', detail.id);
+      fns.push(
+        this.prisma.incentivePoolDetail.update({
+          where: {
+            id: detail.id,
+          },
+          data: {
+            status: IncentiveCLAIMStatus.CLAIMED,
+          },
+        }),
+      );
+    });
+    await this.prisma.$transaction(fns);
+  }
+
   async contributorClaim(body: ClaimBody) {
     const { projectId, poolId, operatorId } = body;
     const project = await this.prisma.project.findFirst({
@@ -166,27 +196,7 @@ export class PoolService {
         Code.NOT_FOUND_ERROR.code,
       );
     }
-
-    const tokens = await this.prisma.incentivePoolDetail.findMany({
-      where: {
-        poolId: poolId,
-        wallet: user.wallet,
-      },
-    });
-    const fns = [];
-    tokens.forEach((token, index) => {
-      fns.push(
-        this.prisma.incentivePoolDetail.update({
-          where: {
-            id: token.id,
-          },
-          data: {
-            status: IncentiveCLAIMStatus.CLAIMED,
-          },
-        }),
-      );
-    });
-    await this.prisma.$transaction(fns);
+    await this._updateClaimStatus(poolId, user.wallet);
 
     return {
       poolId,
@@ -194,13 +204,34 @@ export class PoolService {
   }
 
   async syncUnClaimed(chainId: number, poolId: string) {
-    const pool = await this.prisma.incentivePool.findFirst({
+    const pool = await this.prisma.incentivePool.findUnique({
+      where: { id: poolId },
+    });
+    if (!pool) {
+      throw new HttpException(
+        Code.NOT_FOUND_ERROR.message,
+        Code.NOT_FOUND_ERROR.code,
+      );
+    }
+
+    const AlchemyApiKey = this.configService.get('ALCHEMY_KEY');
+    const provider = new AlchemyProvider(chainId, AlchemyApiKey);
+    const contract = new ethers.Contract(pool.address, IntcentivePoolABI, {
+      provider,
+    });
+
+    const details = await this.prisma.incentivePoolDetail.findMany({
       where: {
-        id: poolId,
-      },
-      include: {
-        details: true,
+        poolId: poolId,
+        status: IncentiveCLAIMStatus.UNCLAIMED,
       },
     });
+    for (let i = 0; i < details.length; i++) {
+      const result = await contract.claimStatus(details[i].wallet);
+      if (result) {
+        await this._updateClaimStatus(poolId, details[i].wallet);
+      }
+    }
+    return { poolId };
   }
 }

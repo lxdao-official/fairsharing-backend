@@ -4,6 +4,7 @@ import {
   ClaimStatusQuery,
   CreatePoolBody,
   PoolListQuery,
+  SyncUnClaimBody,
 } from '@core/type/doc/pool';
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
@@ -46,5 +47,14 @@ export class PoolController {
   async claim(@Body() body: ClaimBody) {
     const result = await this.poolService.contributorClaim(body);
     return CoreApiResponse.success(result);
+  }
+
+  @Post('syncUnClaimed')
+  async syncUnClaimed(@Body() body: SyncUnClaimBody) {
+    const data = await this.poolService.syncUnClaimed(
+      body.chainId,
+      body.poolId,
+    );
+    return CoreApiResponse.success(data);
   }
 }
